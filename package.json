@@ -10,7 +10,8 @@
     "import:curated": "node scripts/import-curated-games.mjs",
     "import:curated:bgg": "node scripts/import-curated-games.mjs --bgg",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "pnpm build && node --test \"dist/**/*.spec.js\""
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.1",
