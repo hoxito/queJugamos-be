@@ -173,7 +173,8 @@ export class GamesService {
       query.orderBy("game.rating_average", "DESC").addOrderBy("game.created_at", "DESC");
     }
 
-    return query.limit(limit).getMany();
+    const games = await query.getMany();
+    return games.slice(0, limit);
   }
 
   async findBySlug(slug: string) {

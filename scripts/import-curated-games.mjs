@@ -69,7 +69,47 @@ async function bggThing(id) {
     playingTime: Number(xmlAttribute(xml, "playingtime", "value"))
   };
 }
+async function wikipediaImage(rulesSourceUrl) {
+  if (!rulesSourceUrl?.startsWith("https://en.wikipedia.org/wiki/")) return null;
 
+  const pageTitle = decodeURIComponent(new URL(rulesSourceUrl).pathname.replace(/^\/wiki\//, "")).replaceAll("_", " ");
+  const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&pithumbsize=800&titles=${encodeURIComponent(pageTitle)}`;
+  const response = await fetch(url, { headers: { "User-Agent": "QueJugamos/0.1 local development" } });
+  if (!response.ok) return null;
+
+  const payload = await response.json();
+  const page = Object.values(payload.query?.pages ?? {})[0];
+  const source = page?.thumbnail?.source;
+  if (!source) return null;
+
+  return {
+    source,
+    sourceUrl: rulesSourceUrl,
+    credit: `Wikipedia: ${page.title ?? pageTitle}`,
+    licenseLabel: "Wikimedia/Wikipedia page image"
+  };
+}
+
+
+async function commonsImage(title) {
+  const url = `https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(`${title} board game`)}&gsrnamespace=6&gsrlimit=5&prop=imageinfo&iiprop=url&iiurlwidth=800`;
+  const response = await fetch(url, { headers: { "User-Agent": "QueJugamos/0.1 local development" } });
+  if (!response.ok) return null;
+
+  const payload = await response.json();
+  const pages = Object.values(payload.query?.pages ?? {}).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+  const page = pages.find((item) => item.imageinfo?.[0]?.thumburl || item.imageinfo?.[0]?.url);
+  const image = page?.imageinfo?.[0];
+  const source = image?.thumburl ?? image?.url;
+  if (!source) return null;
+
+  return {
+    source,
+    sourceUrl: image.descriptionurl ?? image.url,
+    credit: `Wikimedia Commons: ${page.title?.replace(/^File:/, "") ?? title}`,
+    licenseLabel: "Wikimedia Commons search result"
+  };
+}
 async function ensureMaterial(slug) {
   const result = await client.query(
     `
@@ -139,10 +179,10 @@ async function upsertGame(game, bgg) {
   return result.rows[0].id;
 }
 
-async function upsertAsset(gameId, game, bgg) {
-  const urls = [bgg?.image, bgg?.thumbnail].filter(Boolean);
+async function replaceAssets(gameId, game, bgg, publicImage) {
+  await client.query("DELETE FROM game_assets WHERE game_id = $1", [gameId]);
 
-  for (const [index, url] of urls.entries()) {
+  if (game.rulesSourceUrl) {
     await client.query(
       `
         INSERT INTO game_assets (
@@ -157,16 +197,69 @@ async function upsertAsset(gameId, game, bgg) {
           alt_text,
           sort_order
         )
-        VALUES ($1, $2, 'manual_url', $3, $4, 'BoardGameGeek', 'BGG XML API - non-commercial use with attribution', 'image/jpeg', $5, $6)
+        VALUES ($1, 'rules_pdf', 'manual_url', $2, $2, $3, 'External rules reference', 'text/html', $4, 100)
       `,
-      [
-        gameId,
-        index === 0 ? "cover" : "image",
-        url,
-        `https://boardgamegeek.com/boardgame/${bgg.id}`,
-        `${game.title} image`,
-        index
-      ]
+      [gameId, game.rulesSourceUrl, game.title, `${game.title} rules`]
+    );
+  }
+
+  const imageAssets = [
+    ...(publicImage?.source
+      ? [
+          {
+            kind: "cover",
+            url: publicImage.source,
+            sourceUrl: publicImage.sourceUrl,
+            credit: publicImage.credit,
+            licenseLabel: publicImage.licenseLabel,
+            sortOrder: 0
+          }
+        ]
+      : []),
+    ...(bgg?.image
+      ? [
+          {
+            kind: publicImage?.source ? "image" : "cover",
+            url: bgg.image,
+            sourceUrl: `https://boardgamegeek.com/boardgame/${bgg.id}`,
+            credit: "BoardGameGeek",
+            licenseLabel: "BGG XML API - non-commercial use with attribution",
+            sortOrder: publicImage?.source ? 1 : 0
+          }
+        ]
+      : []),
+    ...(bgg?.thumbnail
+      ? [
+          {
+            kind: "image",
+            url: bgg.thumbnail,
+            sourceUrl: `https://boardgamegeek.com/boardgame/${bgg.id}`,
+            credit: "BoardGameGeek",
+            licenseLabel: "BGG XML API - non-commercial use with attribution",
+            sortOrder: publicImage?.source ? 2 : 1
+          }
+        ]
+      : [])
+  ];
+
+  for (const asset of imageAssets) {
+    await client.query(
+      `
+        INSERT INTO game_assets (
+          game_id,
+          kind,
+          source_type,
+          public_url,
+          source_url,
+          credit,
+          license_label,
+          content_type,
+          alt_text,
+          sort_order
+        )
+        VALUES ($1, $2, 'manual_url', $3, $4, $5, $6, 'image/jpeg', $7, $8)
+      `,
+      [gameId, asset.kind, asset.url, asset.sourceUrl, asset.credit, asset.licenseLabel, `${game.title} image`, asset.sortOrder]
     );
   }
 }
@@ -177,6 +270,9 @@ const enrichWithBgg = process.argv.includes("--bgg");
 
 for (const [index, game] of games.entries()) {
   let bgg = null;
+  const wikipedia = await wikipediaImage(game.rulesSourceUrl);
+  const commons = wikipedia ? null : await commonsImage(game.title);
+  const publicImage = wikipedia ?? commons;
 
   if (enrichWithBgg) {
     const id = await bggSearch(game.title);
@@ -203,9 +299,7 @@ for (const [index, game] of games.entries()) {
     );
   }
 
-  if (bgg?.image) {
-    await upsertAsset(gameId, game, bgg);
-  }
+  await replaceAssets(gameId, game, bgg, publicImage);
 
   console.log(`${index + 1}/${games.length} ${game.title}${bgg?.id ? ` BGG:${bgg.id}` : ""}`);
 }
