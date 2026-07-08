@@ -28,7 +28,9 @@ async function bootstrap() {
     .setVersion("0.1.0")
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
+  SwaggerModule.setup(`${apiPrefix}/docs`, app, document, {
+    jsonDocumentUrl: `${apiPrefix}/docs-json`
+  });
 
   await app.listen(config.get<number>("PORT", 3000), "0.0.0.0");
 }

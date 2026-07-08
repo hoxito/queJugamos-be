@@ -17,10 +17,11 @@ The API listens on:
 http://localhost:3000/api/v1
 ```
 
-Swagger:
+API documentation:
 
 ```text
-http://localhost:3000/api/v1/docs
+Swagger UI: http://localhost:3000/api/v1/docs
+OpenAPI JSON: http://localhost:3000/api/v1/docs-json
 ```
 
 ## Docker
