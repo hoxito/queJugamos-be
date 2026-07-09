@@ -17,6 +17,13 @@ Referencias base:
 
 - Seguir los patrones oficiales de NestJS: `module`, `controller`, `service`, providers inyectables, pipes, guards, interceptors y filters cuando apliquen.
 - Organizar por dominio/modulo, no por tipo tecnico global. Ejemplo: `src/modules/games` contiene controller, service, DTOs, modelos/entidades y tests del dominio games.
+- Cada dominio con contrato HTTP propio debe tener su modulo dedicado. Ejemplos actuales: `games`, `materials`, `categories`, `users`, `ratings`, `comments`, `auth`, `prisma`, `redis`.
+- Un modulo debe contener sus controllers, services, DTOs, tipos de dominio, mappers/presenters y tests relacionados. No colocar logica de un dominio dentro de otro modulo solo por conveniencia.
+- Los modulos se comunican mediante providers exportados por el modulo propietario. Si `ratings` necesita resolver juegos, importa `GamesModule` y consume `GamesService`; no accede a detalles internos ni a archivos privados del modulo.
+- Solo mover codigo a `src/common` cuando sea transversal y reutilizable por varios dominios, por ejemplo paginacion, cache decorators/interceptors, filtros HTTP o utilidades puras.
+- Preferir DTOs publicos por caso de uso: un listado puede devolver `GameCatalogItemDto` y un detalle `GameDetailDto`. No exponer directamente modelos Prisma cuando el contrato publico requiere ocultar ids internos, timestamps o relaciones pesadas.
+- La paginacion debe implementarse con helpers comunes de `src/common/pagination` para mantener `page`, `limit`, `total` y `hasNextPage` consistentes en todos los modulos.
+- La cache de respuestas completas debe declararse en controllers con decoradores/interceptors comunes, no duplicarse manualmente en cada service. Los services pueden invalidar namespaces cuando mutan datos.
 - Mantener controladores delgados. Un controller solo debe manejar HTTP, validacion de entrada declarativa, parametros, codigos de respuesta y delegacion al service.
 - Mantener services como capa de aplicacion. Un service orquesta reglas de negocio, transacciones y llamadas a persistencia, pero no debe mezclar detalles HTTP.
 - Evitar dependencias cruzadas entre modulos. Si un modulo necesita capacidades de otro, consumirlas mediante providers exportados por el modulo propietario.
@@ -86,10 +93,13 @@ Referencias base:
 
 - Usar librerias oficiales de NestJS o paquetes ampliamente mantenidos antes de introducir dependencias pequenas o poco confiables.
 - Justificar toda dependencia nueva en el PR o documento de cambio: problema que resuelve, alternativa considerada y superficie de mantenimiento.
+- Antes de agregar una dependencia, verificar mantenimiento, comunidad, licencia, salud del repositorio, fecha de ultima release, issues/PRs activos, volumen de uso razonable y vulnerabilidades conocidas.
+- Preferir librerias simples, ampliamente usadas y mantenidas sobre implementaciones propias cuando resuelven un problema estandar. Ejemplos aceptables: Husky para Git hooks y `openapi-to-postmanv2` para generar colecciones Postman desde OpenAPI.
 - Pinear versiones exactas en `package.json`. No usar rangos como `^` o `~` para dependencias nuevas.
 - Mantener `pnpm-lock.yaml` actualizado y versionado.
 - No actualizar paquetes de forma masiva junto con cambios funcionales. Separar upgrades de dependencias en cambios dedicados.
 - Revisar breaking changes y notas de migracion antes de subir versiones mayores.
+- Ejecutar auditoria de dependencias cuando se agreguen o actualicen paquetes, y documentar cualquier vulnerabilidad aceptada con su motivo y plan de remediacion.
 
 ## Documentacion y comentarios
 

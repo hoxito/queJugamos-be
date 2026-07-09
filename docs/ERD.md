@@ -107,7 +107,7 @@ erDiagram
   }
 ```
 
-Key indexes live in the TypeORM entities and include:
+Key indexes live in `prisma/schema.prisma` and migration SQL. They include:
 
 - `games.slug` unique.
 - `games.status, difficulty, outdoor, min_age`.

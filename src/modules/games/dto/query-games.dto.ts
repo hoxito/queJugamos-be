@@ -73,6 +73,18 @@ export class QueryGamesDto {
   outdoorOnly?: boolean;
 
   @ApiPropertyOptional({
+    description: "Page number for catalog pagination.",
+    minimum: 1,
+    default: 1,
+    example: 1
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number;
+
+  @ApiPropertyOptional({
     description: "Maximum number of games to return.",
     minimum: 1,
     maximum: 100,

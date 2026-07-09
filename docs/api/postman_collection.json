@@ -1,0 +1,1562 @@
+{
+  "event": [],
+  "info": {
+    "description": {
+      "content": "Catalogo de juegos de mesa buscables por materiales, jugadores y reglas.",
+      "type": "text/plain"
+    },
+    "name": "QueJugamos API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Start Google OAuth2 login.",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Start Google OAuth2 login.",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "google"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Complete Google OAuth2 login and return an API bearer token.",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Complete Google OAuth2 login and return an API bearer token.",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google",
+                "callback"
+              ],
+              "query": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "code",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "google",
+                    "callback"
+                  ],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Return the authenticated user represented by the bearer token.",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
+            "description": {},
+            "method": "GET",
+            "name": "Return the authenticated user represented by the bearer token.",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "me"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        }
+      ],
+      "name": "auth"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Health Controller get Health",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Health Controller get Health",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "health"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        }
+      ],
+      "name": "health"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Materials Controller list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Materials Controller list",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "materials"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "materials"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Materials Controller create",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"<string>\",\n  \"slug\": \"<string>\",\n  \"aliases\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Materials Controller create",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "materials"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"name\": \"Papel\",\n  \"kind\": \"paper\",\n  \"slug\": \"paper\",\n  \"aliases\": [\n    \"hoja\",\n    \"cuaderno\"\n  ]\n}"
+                },
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "materials"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        }
+      ],
+      "name": "materials"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Categories Controller list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Categories Controller list",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Categories Controller create",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"name\": \"<string>\",\n  \"slug\": \"<string>\"\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Categories Controller create",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"name\": \"Cartas\",\n  \"slug\": \"cartas\"\n}"
+                },
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        }
+      ],
+      "name": "categories"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Users Controller list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Users Controller list",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "users"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Users Controller create",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"email\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"role\": \"<string>\"\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Users Controller create",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"email\": \"player@quejugamos.local\",\n  \"displayName\": \"Player One\",\n  \"role\": \"player\"\n}"
+                },
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "users"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        }
+      ],
+      "name": "users"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Ratings Controller rate",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"userId\": \"<uuid>\",\n  \"value\": \"<number>\",\n  \"comment\": \"<string>\"\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Ratings Controller rate",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                ":slug",
+                "ratings"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "slug",
+                  "type": "any",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"userId\": \"11111111-1111-1111-1111-111111111111\",\n  \"value\": 5,\n  \"comment\": \"Great for quick family sessions.\"\n}"
+                },
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    ":slug",
+                    "ratings"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "(Required) ",
+                      "disabled": false,
+                      "key": "slug",
+                      "type": "any",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        }
+      ],
+      "name": "ratings"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Games Controller list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Games Controller list",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games"
+              ],
+              "query": [
+                {
+                  "description": "Text search against title, summary and rules.",
+                  "disabled": false,
+                  "key": "query",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material UUIDs owned by the player.",
+                  "disabled": false,
+                  "key": "materialIds",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material UUIDs owned by the player.",
+                  "disabled": false,
+                  "key": "materialIds",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material slugs owned by the player.",
+                  "disabled": false,
+                  "key": "materialSlugs",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material slugs owned by the player.",
+                  "disabled": false,
+                  "key": "materialSlugs",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Number of players available.",
+                  "disabled": false,
+                  "key": "players",
+                  "value": "<number>"
+                },
+                {
+                  "description": "Maximum allowed minimum age.",
+                  "disabled": false,
+                  "key": "maxAge",
+                  "value": "<number>"
+                },
+                {
+                  "description": "Game difficulty filter.",
+                  "disabled": false,
+                  "key": "difficulty",
+                  "value": "<string>"
+                },
+                {
+                  "description": "When true, only return games playable outdoors.",
+                  "disabled": false,
+                  "key": "outdoorOnly",
+                  "value": "<boolean>"
+                },
+                {
+                  "description": "Maximum number of games to return.",
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "30"
+                }
+              ],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "cards"
+                    },
+                    {
+                      "key": "materialIds",
+                      "value": "11111111-1111-1111-1111-111111111111"
+                    },
+                    {
+                      "key": "materialSlugs",
+                      "value": "cards"
+                    },
+                    {
+                      "key": "materialSlugs",
+                      "value": "dice"
+                    },
+                    {
+                      "key": "players",
+                      "value": "4"
+                    },
+                    {
+                      "key": "maxAge",
+                      "value": "8"
+                    },
+                    {
+                      "key": "difficulty",
+                      "value": "medium"
+                    },
+                    {
+                      "key": "outdoorOnly",
+                      "value": "false"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller create",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"title\": \"<string>\",\n  \"summaryMd\": \"<string>\",\n  \"rulesMd\": \"<string>\",\n  \"minPlayers\": \"<number>\",\n  \"maxPlayers\": \"<number>\",\n  \"minAge\": \"<number>\",\n  \"difficulty\": \"<string>\",\n  \"durationMinutes\": \"<number>\",\n  \"indoor\": \"<boolean>\",\n  \"outdoor\": \"<boolean>\",\n  \"materials\": [\n    {\n      \"materialId\": \"<uuid>\",\n      \"requirementType\": \"<string>\",\n      \"quantity\": \"<number>\",\n      \"notes\": \"<string>\"\n    },\n    {\n      \"materialId\": \"<uuid>\",\n      \"requirementType\": \"<string>\",\n      \"quantity\": \"<number>\",\n      \"notes\": \"<string>\"\n    }\n  ],\n  \"slug\": \"<string>\",\n  \"rulesSourceUrl\": \"<string>\",\n  \"externalSource\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"status\": \"<string>\",\n  \"categoryIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"assets\": [\n    {\n      \"kind\": \"<string>\",\n      \"sourceType\": \"<string>\",\n      \"publicUrl\": \"<string>\",\n      \"sourceUrl\": \"<string>\",\n      \"credit\": \"<string>\",\n      \"licenseLabel\": \"<string>\",\n      \"storageProvider\": \"<string>\",\n      \"bucket\": \"<string>\",\n      \"objectKey\": \"<string>\",\n      \"contentType\": \"<string>\",\n      \"altText\": \"<string>\",\n      \"sortOrder\": \"<number>\"\n    },\n    {\n      \"kind\": \"<string>\",\n      \"sourceType\": \"<string>\",\n      \"publicUrl\": \"<string>\",\n      \"sourceUrl\": \"<string>\",\n      \"credit\": \"<string>\",\n      \"licenseLabel\": \"<string>\",\n      \"storageProvider\": \"<string>\",\n      \"bucket\": \"<string>\",\n      \"objectKey\": \"<string>\",\n      \"contentType\": \"<string>\",\n      \"altText\": \"<string>\",\n      \"sortOrder\": \"<number>\"\n    }\n  ],\n  \"cardAdaptations\": [\n    {\n      \"deckType\": \"<string>\",\n      \"uniqueCardsNeeded\": \"<number>\",\n      \"totalCardsNeeded\": \"<number>\",\n      \"mappings\": [\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        },\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        }\n      ],\n      \"notes\": \"<string>\"\n    },\n    {\n      \"deckType\": \"<string>\",\n      \"uniqueCardsNeeded\": \"<number>\",\n      \"totalCardsNeeded\": \"<number>\",\n      \"mappings\": [\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        },\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        }\n      ],\n      \"notes\": \"<string>\"\n    }\n  ]\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Games Controller create",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"title\": \"Tateti\",\n  \"summaryMd\": \"A fast alignment game on a 3 by 3 grid.\",\n  \"rulesMd\": \"Players alternate marking X or O. The first to complete a row wins.\",\n  \"minPlayers\": 2,\n  \"maxPlayers\": 4,\n  \"minAge\": 8,\n  \"difficulty\": \"easy\",\n  \"durationMinutes\": 15,\n  \"indoor\": true,\n  \"outdoor\": true,\n  \"materials\": [\n    {\n      \"materialId\": \"11111111-1111-1111-1111-111111111111\",\n      \"requirementType\": \"required\",\n      \"quantity\": 1,\n      \"notes\": \"Use one sheet per player.\"\n    },\n    {\n      \"materialId\": \"11111111-1111-1111-1111-111111111111\",\n      \"requirementType\": \"required\",\n      \"quantity\": 1,\n      \"notes\": \"Use one sheet per player.\"\n    }\n  ],\n  \"slug\": \"tateti\",\n  \"rulesSourceUrl\": \"https://en.wikipedia.org/wiki/Tic-tac-toe\",\n  \"externalSource\": \"boardgamegeek\",\n  \"externalId\": \"12345\",\n  \"status\": \"pending\",\n  \"categoryIds\": [\n    \"22222222-2222-2222-2222-222222222222\"\n  ],\n  \"assets\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"publicUrl\": \"https://example.com/game-cover.jpg\",\n      \"sourceUrl\": \"https://commons.wikimedia.org/wiki/File:Example.jpg\",\n      \"credit\": \"Wikimedia Commons\",\n      \"licenseLabel\": \"CC BY-SA 4.0\",\n      \"storageProvider\": \"s3\",\n      \"bucket\": \"quejugamos-assets\",\n      \"objectKey\": \"games/catan/cover.jpg\",\n      \"contentType\": \"image/jpeg\",\n      \"altText\": \"Catan board setup\",\n      \"sortOrder\": 0\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"publicUrl\": \"https://example.com/game-cover.jpg\",\n      \"sourceUrl\": \"https://commons.wikimedia.org/wiki/File:Example.jpg\",\n      \"credit\": \"Wikimedia Commons\",\n      \"licenseLabel\": \"CC BY-SA 4.0\",\n      \"storageProvider\": \"s3\",\n      \"bucket\": \"quejugamos-assets\",\n      \"objectKey\": \"games/catan/cover.jpg\",\n      \"contentType\": \"image/jpeg\",\n      \"altText\": \"Catan board setup\",\n      \"sortOrder\": 0\n    }\n  ],\n  \"cardAdaptations\": [\n    {\n      \"deckType\": \"standard_52\",\n      \"uniqueCardsNeeded\": 12,\n      \"totalCardsNeeded\": 24,\n      \"mappings\": [\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        },\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        }\n      ],\n      \"notes\": \"Remove jokers before playing.\"\n    },\n    {\n      \"deckType\": \"standard_52\",\n      \"uniqueCardsNeeded\": 12,\n      \"totalCardsNeeded\": 24,\n      \"mappings\": [\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        },\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        }\n      ],\n      \"notes\": \"Remove jokers before playing.\"\n    }\n  ]\n}"
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller query",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"query\": \"<string>\",\n  \"materialIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"materialSlugs\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"players\": \"<number>\",\n  \"maxAge\": \"<number>\",\n  \"difficulty\": \"<string>\",\n  \"outdoorOnly\": \"<boolean>\",\n  \"limit\": 30\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Games Controller query",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                "query"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"query\": \"cards\",\n  \"materialIds\": [\n    \"11111111-1111-1111-1111-111111111111\"\n  ],\n  \"materialSlugs\": [\n    \"cards\",\n    \"dice\"\n  ],\n  \"players\": 4,\n  \"maxAge\": 8,\n  \"difficulty\": \"medium\",\n  \"outdoorOnly\": false,\n  \"limit\": 10\n}"
+                },
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    "query"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller update",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"title\": \"<string>\",\n  \"slug\": \"<string>\",\n  \"summaryMd\": \"<string>\",\n  \"rulesMd\": \"<string>\",\n  \"rulesSourceUrl\": \"<string>\",\n  \"externalSource\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"minPlayers\": \"<number>\",\n  \"maxPlayers\": \"<number>\",\n  \"minAge\": \"<number>\",\n  \"difficulty\": \"<string>\",\n  \"durationMinutes\": \"<number>\",\n  \"indoor\": \"<boolean>\",\n  \"outdoor\": \"<boolean>\",\n  \"status\": \"<string>\",\n  \"materials\": [\n    {\n      \"materialId\": \"<uuid>\",\n      \"requirementType\": \"<string>\",\n      \"quantity\": \"<number>\",\n      \"notes\": \"<string>\"\n    },\n    {\n      \"materialId\": \"<uuid>\",\n      \"requirementType\": \"<string>\",\n      \"quantity\": \"<number>\",\n      \"notes\": \"<string>\"\n    }\n  ],\n  \"categoryIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"assets\": [\n    {\n      \"kind\": \"<string>\",\n      \"sourceType\": \"<string>\",\n      \"publicUrl\": \"<string>\",\n      \"sourceUrl\": \"<string>\",\n      \"credit\": \"<string>\",\n      \"licenseLabel\": \"<string>\",\n      \"storageProvider\": \"<string>\",\n      \"bucket\": \"<string>\",\n      \"objectKey\": \"<string>\",\n      \"contentType\": \"<string>\",\n      \"altText\": \"<string>\",\n      \"sortOrder\": \"<number>\"\n    },\n    {\n      \"kind\": \"<string>\",\n      \"sourceType\": \"<string>\",\n      \"publicUrl\": \"<string>\",\n      \"sourceUrl\": \"<string>\",\n      \"credit\": \"<string>\",\n      \"licenseLabel\": \"<string>\",\n      \"storageProvider\": \"<string>\",\n      \"bucket\": \"<string>\",\n      \"objectKey\": \"<string>\",\n      \"contentType\": \"<string>\",\n      \"altText\": \"<string>\",\n      \"sortOrder\": \"<number>\"\n    }\n  ],\n  \"cardAdaptations\": [\n    {\n      \"deckType\": \"<string>\",\n      \"uniqueCardsNeeded\": \"<number>\",\n      \"totalCardsNeeded\": \"<number>\",\n      \"mappings\": [\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        },\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        }\n      ],\n      \"notes\": \"<string>\"\n    },\n    {\n      \"deckType\": \"<string>\",\n      \"uniqueCardsNeeded\": \"<number>\",\n      \"totalCardsNeeded\": \"<number>\",\n      \"mappings\": [\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        },\n        {\n          \"sourceCard\": \"<string>\",\n          \"meaning\": \"<string>\",\n          \"quantity\": \"<number>\"\n        }\n      ],\n      \"notes\": \"<string>\"\n    }\n  ]\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "name": "Games Controller update",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                ":slug"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "slug",
+                  "type": "any",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"title\": \"Tateti\",\n  \"slug\": \"tateti\",\n  \"summaryMd\": \"A fast alignment game on a 3 by 3 grid.\",\n  \"rulesMd\": \"Players alternate marking X or O. The first to complete a row wins.\",\n  \"rulesSourceUrl\": \"https://en.wikipedia.org/wiki/Tic-tac-toe\",\n  \"externalSource\": \"boardgamegeek\",\n  \"externalId\": \"12345\",\n  \"minPlayers\": 2,\n  \"maxPlayers\": 4,\n  \"minAge\": 8,\n  \"difficulty\": \"easy\",\n  \"durationMinutes\": 15,\n  \"indoor\": true,\n  \"outdoor\": true,\n  \"status\": \"pending\",\n  \"materials\": [\n    {\n      \"materialId\": \"11111111-1111-1111-1111-111111111111\",\n      \"requirementType\": \"required\",\n      \"quantity\": 1,\n      \"notes\": \"Use one sheet per player.\"\n    },\n    {\n      \"materialId\": \"11111111-1111-1111-1111-111111111111\",\n      \"requirementType\": \"required\",\n      \"quantity\": 1,\n      \"notes\": \"Use one sheet per player.\"\n    }\n  ],\n  \"categoryIds\": [\n    \"22222222-2222-2222-2222-222222222222\"\n  ],\n  \"assets\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"publicUrl\": \"https://example.com/game-cover.jpg\",\n      \"sourceUrl\": \"https://commons.wikimedia.org/wiki/File:Example.jpg\",\n      \"credit\": \"Wikimedia Commons\",\n      \"licenseLabel\": \"CC BY-SA 4.0\",\n      \"storageProvider\": \"s3\",\n      \"bucket\": \"quejugamos-assets\",\n      \"objectKey\": \"games/catan/cover.jpg\",\n      \"contentType\": \"image/jpeg\",\n      \"altText\": \"Catan board setup\",\n      \"sortOrder\": 0\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"publicUrl\": \"https://example.com/game-cover.jpg\",\n      \"sourceUrl\": \"https://commons.wikimedia.org/wiki/File:Example.jpg\",\n      \"credit\": \"Wikimedia Commons\",\n      \"licenseLabel\": \"CC BY-SA 4.0\",\n      \"storageProvider\": \"s3\",\n      \"bucket\": \"quejugamos-assets\",\n      \"objectKey\": \"games/catan/cover.jpg\",\n      \"contentType\": \"image/jpeg\",\n      \"altText\": \"Catan board setup\",\n      \"sortOrder\": 0\n    }\n  ],\n  \"cardAdaptations\": [\n    {\n      \"deckType\": \"standard_52\",\n      \"uniqueCardsNeeded\": 12,\n      \"totalCardsNeeded\": 24,\n      \"mappings\": [\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        },\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        }\n      ],\n      \"notes\": \"Remove jokers before playing.\"\n    },\n    {\n      \"deckType\": \"standard_52\",\n      \"uniqueCardsNeeded\": 12,\n      \"totalCardsNeeded\": 24,\n      \"mappings\": [\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        },\n        {\n          \"sourceCard\": \"Ace of spades\",\n          \"meaning\": \"Bomb card\",\n          \"quantity\": 4\n        }\n      ],\n      \"notes\": \"Remove jokers before playing.\"\n    }\n  ]\n}"
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "PATCH",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    ":slug"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "(Required) ",
+                      "disabled": false,
+                      "key": "slug",
+                      "type": "any",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller find By Slug",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Games Controller find By Slug",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                ":slug"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "slug",
+                  "type": "any",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    ":slug"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "(Required) ",
+                      "disabled": false,
+                      "key": "slug",
+                      "type": "any",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        }
+      ],
+      "name": "games"
+    },
+    {
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "event": [],
+      "item": [
+        {
+          "event": [],
+          "name": "Comments Controller list",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "method": "GET",
+            "name": "Comments Controller list",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                ":slug",
+                "comments"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "slug",
+                  "type": "any",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    ":slug",
+                    "comments"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "(Required) ",
+                      "disabled": false,
+                      "key": "slug",
+                      "type": "any",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Comments Controller create",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"userId\": \"<uuid>\",\n  \"bodyMd\": \"<string>\",\n  \"parentId\": \"<uuid>\"\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Comments Controller create",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                ":slug",
+                "comments"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "slug",
+                  "type": "any",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"userId\": \"11111111-1111-1111-1111-111111111111\",\n  \"bodyMd\": \"Works well with kids if you shorten the rounds.\",\n  \"parentId\": \"22222222-2222-2222-2222-222222222222\"\n}"
+                },
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    ":slug",
+                    "comments"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "(Required) ",
+                      "disabled": false,
+                      "key": "slug",
+                      "type": "any",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        }
+      ],
+      "name": "comments"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "type": "string",
+      "value": "/"
+    }
+  ]
+}

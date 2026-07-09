@@ -1,0 +1,300 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+enum GameStatus {
+  draft
+  pending
+  approved
+  rejected
+  archived
+}
+
+enum MaterialKind {
+  writing
+  paper
+  cards
+  board
+  tiles
+  pieces
+  blocks
+  money
+  bags
+  tokens
+  dice
+  timer
+  space
+  device
+  other
+}
+
+enum RequirementType {
+  required
+  optional
+}
+
+enum DeckType {
+  standard_52
+  spanish_40
+  custom
+}
+
+enum AssetKind {
+  cover
+  rules_pdf
+  printable
+  image
+  video
+  other
+}
+
+enum AssetSourceType {
+  manual_url
+  object_storage
+}
+
+enum StorageProvider {
+  s3
+  r2
+  gcs
+  azure_blob
+  supabase
+  other
+}
+
+enum UserRole {
+  player
+  reviewer
+  admin
+}
+
+model User {
+  id          String        @id @default(uuid()) @db.Uuid
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  email       String        @unique
+  displayName String        @map("display_name")
+  role        UserRole      @default(player)
+  games       Game[]        @relation("CreatedGames")
+  ratings     GameRating[]
+  comments    GameComment[]
+  oauthAccounts OAuthAccount[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model OAuthAccount {
+  id                String    @id @default(uuid()) @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  userId            String    @map("user_id") @db.Uuid
+  provider          String
+  providerAccountId String    @map("provider_account_id")
+  email             String
+  displayName       String?   @map("display_name")
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("oauth_accounts")
+}
+
+model Game {
+  id                String           @id @default(uuid()) @db.Uuid
+  createdAt         DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime?        @map("deleted_at") @db.Timestamptz(6)
+  title             String
+  slug              String           @unique
+  summaryMd         String           @map("summary_md")
+  rulesMd           String           @map("rules_md")
+  rulesSourceUrl    String?          @map("rules_source_url")
+  externalSource    String?          @map("external_source")
+  externalId        String?          @map("external_id")
+  minPlayers        Int              @map("min_players")
+  maxPlayers        Int              @map("max_players")
+  minAge            Int              @map("min_age")
+  difficulty        Difficulty
+  durationMinutes   Int              @map("duration_minutes")
+  indoor            Boolean          @default(true)
+  outdoor           Boolean          @default(false)
+  status            GameStatus       @default(pending)
+  ratingAverage     Decimal          @default(0) @map("rating_average") @db.Decimal(3, 2)
+  ratingCount       Int              @default(0) @map("rating_count")
+  createdById       String?          @map("created_by_id") @db.Uuid
+  createdBy         User?            @relation("CreatedGames", fields: [createdById], references: [id])
+  materials         GameMaterial[]
+  categories        GameCategory[]
+  cardAdaptations   CardAdaptation[]
+  assets            GameAsset[]
+  ratings           GameRating[]
+  comments          GameComment[]
+
+  @@index([minPlayers, maxPlayers], map: "idx_games_player_range")
+  @@index([status, difficulty, outdoor, minAge], map: "idx_games_search_filters")
+  @@index([minAge])
+  @@index([difficulty])
+  @@index([outdoor])
+  @@index([status])
+  @@map("games")
+}
+
+model Material {
+  id            String         @id @default(uuid()) @db.Uuid
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt     DateTime?      @map("deleted_at") @db.Timestamptz(6)
+  name          String
+  slug          String         @unique
+  kind          MaterialKind
+  aliases       String[]       @default([])
+  gameMaterials GameMaterial[]
+
+  @@index([kind])
+  @@map("materials")
+}
+
+model Category {
+  id             String         @id @default(uuid()) @db.Uuid
+  createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt      DateTime?      @map("deleted_at") @db.Timestamptz(6)
+  name           String
+  slug           String         @unique
+  gameCategories GameCategory[]
+
+  @@map("categories")
+}
+
+model GameMaterial {
+  id              String          @id @default(uuid()) @db.Uuid
+  gameId          String          @map("game_id") @db.Uuid
+  materialId      String          @map("material_id") @db.Uuid
+  requirementType RequirementType @map("requirement_type")
+  quantity        Int?
+  notes           String?
+  game            Game            @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  material        Material        @relation(fields: [materialId], references: [id])
+
+  @@unique([gameId, materialId], map: "idx_game_materials_game_material")
+  @@index([materialId, requirementType], map: "idx_game_materials_material_requirement")
+  @@map("game_materials")
+}
+
+model GameCategory {
+  id         String   @id @default(uuid()) @db.Uuid
+  gameId     String   @map("game_id") @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  game       Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([gameId, categoryId], map: "idx_game_categories_game_category")
+  @@index([categoryId], map: "idx_game_categories_category")
+  @@map("game_categories")
+}
+
+model CardAdaptation {
+  id                String        @id @default(uuid()) @db.Uuid
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  gameId            String        @map("game_id") @db.Uuid
+  deckType          DeckType      @map("deck_type")
+  uniqueCardsNeeded Int           @map("unique_cards_needed")
+  totalCardsNeeded  Int           @map("total_cards_needed")
+  notes             String?
+  game              Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  mappings          CardMapping[]
+
+  @@index([gameId], map: "idx_card_adaptations_game")
+  @@map("card_adaptations")
+}
+
+model CardMapping {
+  id               String         @id @default(uuid()) @db.Uuid
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt        DateTime?      @map("deleted_at") @db.Timestamptz(6)
+  cardAdaptationId String         @map("card_adaptation_id") @db.Uuid
+  sourceCard       String         @map("source_card")
+  meaning          String
+  quantity         Int?
+  cardAdaptation   CardAdaptation @relation(fields: [cardAdaptationId], references: [id], onDelete: Cascade)
+
+  @@index([cardAdaptationId], map: "idx_card_mappings_adaptation")
+  @@map("card_mappings")
+}
+
+model GameAsset {
+  id              String           @id @default(uuid()) @db.Uuid
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt       DateTime?        @map("deleted_at") @db.Timestamptz(6)
+  gameId          String           @map("game_id") @db.Uuid
+  kind            AssetKind
+  sourceType      AssetSourceType  @map("source_type")
+  publicUrl       String?          @map("public_url")
+  sourceUrl       String?          @map("source_url")
+  credit          String?
+  licenseLabel    String?          @map("license_label")
+  storageProvider StorageProvider? @map("storage_provider")
+  bucket          String?
+  objectKey       String?          @map("object_key")
+  contentType     String?          @map("content_type")
+  sizeBytes       BigInt?          @map("size_bytes")
+  altText         String?          @map("alt_text")
+  sortOrder       Int              @default(0) @map("sort_order")
+  game            Game             @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId, kind], map: "idx_game_assets_game_kind")
+  @@index([storageProvider, bucket, objectKey], map: "idx_game_assets_storage_object")
+  @@map("game_assets")
+}
+
+model GameRating {
+  id        String    @id @default(uuid()) @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  gameId    String    @map("game_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  value     Int
+  comment   String?
+  game      Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([gameId], map: "idx_game_ratings_game")
+  @@map("game_ratings")
+}
+
+model GameComment {
+  id        String        @id @default(uuid()) @db.Uuid
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  gameId    String        @map("game_id") @db.Uuid
+  userId    String        @map("user_id") @db.Uuid
+  parentId  String?       @map("parent_id") @db.Uuid
+  bodyMd    String        @map("body_md")
+  game      Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id])
+  parent    GameComment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   GameComment[] @relation("CommentReplies")
+
+  @@index([gameId, createdAt], map: "idx_game_comments_game_created")
+  @@index([parentId], map: "idx_game_comments_parent")
+  @@map("game_comments")
+}

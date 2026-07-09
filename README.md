@@ -8,6 +8,9 @@ Este repo es independiente del frontend para evitar repositorios Git anidados o 
 
 ```bash
 pnpm install
+pnpm prisma:generate
+pnpm prisma:migrate
+pnpm prisma:seed
 pnpm start:dev
 ```
 
@@ -30,6 +33,8 @@ OpenAPI JSON: http://localhost:3000/api/v1/docs-json
 docker compose up --build
 ```
 
+The Postgres service stores data in the named volume `postgres_data`. The API container runs `prisma migrate deploy` and the idempotent Prisma seed before starting, so existing data is preserved between restarts.
+
 Services:
 
 - API: `localhost:3000`
@@ -42,11 +47,75 @@ Use `POST /api/v1/games/query` for complex searches by materials, players, age a
 
 `QUERY` is documented in `docs/HTTP_QUERY.md`; it is not the primary endpoint because NestJS/adapters/proxies do not support it consistently yet.
 
+Catalog responses are paginated and intentionally lightweight:
+
+```text
+GET /api/v1/games?page=1&limit=30
+POST /api/v1/games/query
+```
+
+They return `items`, `total`, `page`, `limit` and `hasNextPage`. Each item includes public fields only: title, slug, summary, rating numbers, cover image, categories, materials and basic metadata.
+Catalog items also include public `ratings` so the frontend can show rating distributions or previews without fetching each detail page.
+
+Available filters for the catalog:
+
+```text
+GET /api/v1/games/filters
+```
+
+It returns categories, materials, difficulties and available player/age ranges for filter UI.
+
+Game details use:
+
+```text
+GET /api/v1/games/:slug
+```
+
+The detail response includes structured rules, gallery images, downloadable assets, external reference links and public ratings.
+
+Moderator/admin review queue:
+
+```text
+GET /api/v1/games/moderation/pending
+PATCH /api/v1/games/:slug/moderation
+```
+
+Both require bearer auth with `reviewer` or `admin` role. Moderation currently accepts `approved` or `rejected`.
+
+Google OAuth starts at:
+
+```text
+GET /api/v1/auth/google
+```
+
+After Google returns to `GOOGLE_OAUTH_CALLBACK_URL`, the backend redirects to `FRONTEND_AUTH_CALLBACK_URL` with the bearer token in the URL fragment. The frontend consumes that fragment and then calls `GET /api/v1/auth/me` to load the authenticated user and role.
+
+Catalog, catalog query, filter and detail responses are cached through a Redis-backed Nest interceptor. Cache limits are configurable with:
+
+```text
+GAMES_QUERY_CACHE_TTL_SECONDS
+GAMES_QUERY_CACHE_MAX_ENTRIES
+GAMES_DETAIL_CACHE_TTL_SECONDS
+GAMES_DETAIL_CACHE_MAX_ENTRIES
+GAMES_FILTERS_CACHE_TTL_SECONDS
+GAMES_FILTERS_CACHE_MAX_ENTRIES
+```
+
 ## Documentation
 
 - [Modelo de datos](docs/DATA_MODEL.md)
 - [ERD](docs/ERD.md)
+- [Migraciones Prisma](docs/MIGRATIONS.md)
 - [HTTP QUERY](docs/HTTP_QUERY.md)
+- [API collections](docs/API_COLLECTIONS.md)
+- [Errores RFC 9457](docs/ERRORS.md)
+- [Autenticacion OAuth2](docs/AUTH.md)
+
+Generate committed Swagger/OpenAPI and Postman collection files with:
+
+```bash
+pnpm api:docs:generate
+```
 
 ## Curated game import
 

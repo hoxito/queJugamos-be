@@ -1,5 +1,7 @@
 # Modelo de datos
 
+La fuente de verdad del schema es `prisma/schema.prisma`. Las migraciones versionadas viven en `prisma/migrations` y el seed idempotente en `prisma/seed.cjs`.
+
 ## Slug
 
 Un `slug` es un identificador legible para URLs, derivado de un nombre humano y unico por entidad publica.
@@ -133,6 +135,24 @@ type GameRating = {
   deletedAt?: string;
 };
 ```
+
+Public API responses expose ratings as display data. Catalog items include `ratingAverage: number` and `ratingCount: number`; game detail additionally includes a `ratings` array with rating values and optional comments.
+
+## Public DTOs
+
+`GET /games` and `POST /games/query` return a paginated catalog DTO:
+
+```ts
+type PaginatedGames = {
+  items: GameCatalogItem[];
+  total: number;
+  page: number;
+  limit: number;
+  hasNextPage: boolean;
+};
+```
+
+Catalog items intentionally omit internal ids and timestamps. `GET /games/:slug` returns `GameDetail`, which adds `rulesMd`, `galleryImages`, `downloadableAssets`, `referenceLinks` and public ratings.
 
 ## Comment
 
