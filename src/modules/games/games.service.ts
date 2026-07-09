@@ -1,52 +1,64 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { DataSource, In, Repository } from "typeorm";
+import { Prisma } from "@prisma/client";
+import { paginatedResponse, resolvePageOptions } from "../../common/pagination/pagination";
 import { toSlug } from "../../common/slug";
-import { CreateCommentDto } from "./dto/create-comment.dto";
+import { PrismaService } from "../prisma/prisma.service";
+import { RedisCacheService } from "../redis/redis-cache.service";
 import { CreateGameDto } from "./dto/create-game.dto";
+import { ModerateGameDto } from "./dto/moderate-game.dto";
 import { QueryGamesDto } from "./dto/query-games.dto";
-import { RateGameDto } from "./dto/rate-game.dto";
+import { UpdateGameDto } from "./dto/update-game.dto";
 import { GameStatus, RequirementType } from "./domain/game.enums";
-import { CardAdaptationEntity } from "./entities/card-adaptation.entity";
-import { CategoryEntity } from "./entities/category.entity";
-import { GameAssetEntity } from "./entities/game-asset.entity";
-import { GameCategoryEntity } from "./entities/game-category.entity";
-import { GameCommentEntity } from "./entities/game-comment.entity";
-import { GameMaterialEntity } from "./entities/game-material.entity";
-import { GameRatingEntity } from "./entities/game-rating.entity";
-import { GameEntity } from "./entities/game.entity";
-import { MaterialEntity } from "./entities/material.entity";
+
+const gameInclude = {
+  materials: { include: { material: true } },
+  categories: { include: { category: true } },
+  cardAdaptations: { include: { mappings: true } },
+  assets: true,
+  ratings: true,
+  comments: true
+} satisfies Prisma.GameInclude;
+
+const catalogInclude = {
+  materials: { include: { material: true } },
+  categories: { include: { category: true } },
+  assets: true,
+  ratings: true
+} satisfies Prisma.GameInclude;
+
+type GameCatalogRecord = Prisma.GameGetPayload<{ include: typeof catalogInclude }>;
+type GameDetailRecord = Prisma.GameGetPayload<{ include: typeof gameInclude }>;
 
 @Injectable()
 export class GamesService {
   constructor(
-    private readonly dataSource: DataSource,
-    @InjectRepository(GameEntity)
-    private readonly games: Repository<GameEntity>,
-    @InjectRepository(MaterialEntity)
-    private readonly materials: Repository<MaterialEntity>,
-    @InjectRepository(CategoryEntity)
-    private readonly categories: Repository<CategoryEntity>,
-    @InjectRepository(GameRatingEntity)
-    private readonly ratings: Repository<GameRatingEntity>,
-    @InjectRepository(GameCommentEntity)
-    private readonly comments: Repository<GameCommentEntity>
+    private readonly prisma: PrismaService,
+    private readonly cache: RedisCacheService
   ) {}
 
   async create(dto: CreateGameDto) {
     const slug = dto.slug ? toSlug(dto.slug) : toSlug(dto.title);
     const materialIds = dto.materials.map((material) => material.materialId);
-    const existingMaterials = await this.materials.findBy({ id: In(materialIds) });
+    const existingMaterials = await this.prisma.material.count({
+      where: { id: { in: materialIds }, deletedAt: null }
+    });
 
-    if (existingMaterials.length !== materialIds.length) {
+    if (existingMaterials !== materialIds.length) {
       throw new NotFoundException("One or more materials do not exist.");
     }
 
     const categoryIds = dto.categoryIds ?? [];
-    const existingCategories = categoryIds.length > 0 ? await this.categories.findBy({ id: In(categoryIds) }) : [];
+    const existingCategories =
+      categoryIds.length > 0
+        ? await this.prisma.category.count({ where: { id: { in: categoryIds }, deletedAt: null } })
+        : 0;
 
-    return this.dataSource.transaction(async (manager) => {
-      const game = manager.create(GameEntity, {
+    if (existingCategories !== categoryIds.length) {
+      throw new NotFoundException("One or more categories do not exist.");
+    }
+
+    const game = await this.prisma.game.create({
+      data: {
         title: dto.title,
         slug,
         summaryMd: dto.summaryMd,
@@ -61,133 +73,315 @@ export class GamesService {
         durationMinutes: dto.durationMinutes,
         indoor: dto.indoor,
         outdoor: dto.outdoor,
-        status: dto.status ?? GameStatus.Pending
-      });
-      const savedGame = await manager.save(game);
-
-      const gameMaterials = dto.materials.map((item) =>
-        manager.create(GameMaterialEntity, {
-          gameId: savedGame.id,
-          materialId: item.materialId,
-          requirementType: item.requirementType,
-          quantity: item.quantity,
-          notes: item.notes
-        })
-      );
-      await manager.save(gameMaterials);
-
-      if (existingCategories.length > 0) {
-        await manager.save(
-          existingCategories.map((category) =>
-            manager.create(GameCategoryEntity, {
-              gameId: savedGame.id,
-              categoryId: category.id
-            })
-          )
-        );
+        status: dto.status ?? GameStatus.Pending,
+        materials: {
+          create: dto.materials.map((item) => ({
+            materialId: item.materialId,
+            requirementType: item.requirementType,
+            quantity: item.quantity,
+            notes: item.notes
+          }))
+        },
+        categories:
+          categoryIds.length > 0
+            ? {
+                create: categoryIds.map((categoryId) => ({ categoryId }))
+              }
+            : undefined,
+        assets: dto.assets?.length
+          ? {
+              create: dto.assets.map((asset) => ({
+                kind: asset.kind,
+                sourceType: asset.sourceType,
+                publicUrl: asset.publicUrl,
+                sourceUrl: asset.sourceUrl,
+                credit: asset.credit,
+                licenseLabel: asset.licenseLabel,
+                storageProvider: asset.storageProvider,
+                bucket: asset.bucket,
+                objectKey: asset.objectKey,
+                contentType: asset.contentType,
+                altText: asset.altText,
+                sortOrder: asset.sortOrder ?? 0
+              }))
+            }
+          : undefined,
+        cardAdaptations: dto.cardAdaptations?.length
+          ? {
+              create: dto.cardAdaptations.map((adaptation) => ({
+                deckType: adaptation.deckType,
+                uniqueCardsNeeded: adaptation.uniqueCardsNeeded,
+                totalCardsNeeded: adaptation.totalCardsNeeded,
+                notes: adaptation.notes,
+                mappings: {
+                  create: adaptation.mappings.map((mapping) => ({
+                    sourceCard: mapping.sourceCard,
+                    meaning: mapping.meaning,
+                    quantity: mapping.quantity
+                  }))
+                }
+              }))
+            }
+          : undefined
       }
-
-      if (dto.assets?.length) {
-        await manager.save(
-          dto.assets.map((asset) =>
-            manager.create(GameAssetEntity, {
-              gameId: savedGame.id,
-              ...asset
-            })
-          )
-        );
-      }
-
-      if (dto.cardAdaptations?.length) {
-        await manager.save(
-          dto.cardAdaptations.map((adaptation) =>
-            manager.create(CardAdaptationEntity, {
-              gameId: savedGame.id,
-              ...adaptation
-            })
-          )
-        );
-      }
-
-      return this.findBySlug(savedGame.slug);
     });
+
+    await this.invalidateGameCaches(game.slug);
+    return this.findBySlug(game.slug);
+  }
+
+  async update(slug: string, dto: UpdateGameDto) {
+    const existingGame = await this.findIdBySlug(slug);
+    const nextSlug = dto.slug ? toSlug(dto.slug) : undefined;
+
+    if (dto.materials) {
+      const materialIds = dto.materials.map((material) => material.materialId);
+      const existingMaterials = await this.prisma.material.count({
+        where: { id: { in: materialIds }, deletedAt: null }
+      });
+      if (existingMaterials !== materialIds.length) {
+        throw new NotFoundException("One or more materials do not exist.");
+      }
+    }
+
+    if (dto.categoryIds) {
+      const existingCategories = await this.prisma.category.count({
+        where: { id: { in: dto.categoryIds }, deletedAt: null }
+      });
+      if (existingCategories !== dto.categoryIds.length) {
+        throw new NotFoundException("One or more categories do not exist.");
+      }
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.game.update({
+        where: { id: existingGame.id },
+        data: {
+          ...(dto.title !== undefined ? { title: dto.title } : {}),
+          ...(nextSlug !== undefined ? { slug: nextSlug } : {}),
+          ...(dto.summaryMd !== undefined ? { summaryMd: dto.summaryMd } : {}),
+          ...(dto.rulesMd !== undefined ? { rulesMd: dto.rulesMd } : {}),
+          ...(dto.rulesSourceUrl !== undefined ? { rulesSourceUrl: dto.rulesSourceUrl } : {}),
+          ...(dto.externalSource !== undefined ? { externalSource: dto.externalSource } : {}),
+          ...(dto.externalId !== undefined ? { externalId: dto.externalId } : {}),
+          ...(dto.minPlayers !== undefined ? { minPlayers: dto.minPlayers } : {}),
+          ...(dto.maxPlayers !== undefined ? { maxPlayers: dto.maxPlayers } : {}),
+          ...(dto.minAge !== undefined ? { minAge: dto.minAge } : {}),
+          ...(dto.difficulty !== undefined ? { difficulty: dto.difficulty } : {}),
+          ...(dto.durationMinutes !== undefined ? { durationMinutes: dto.durationMinutes } : {}),
+          ...(dto.indoor !== undefined ? { indoor: dto.indoor } : {}),
+          ...(dto.outdoor !== undefined ? { outdoor: dto.outdoor } : {}),
+          ...(dto.status !== undefined ? { status: dto.status } : {})
+        }
+      });
+
+      if (dto.materials) {
+        await tx.gameMaterial.deleteMany({ where: { gameId: existingGame.id } });
+        await tx.gameMaterial.createMany({
+          data: dto.materials.map((item) => ({
+            gameId: existingGame.id,
+            materialId: item.materialId,
+            requirementType: item.requirementType,
+            quantity: item.quantity,
+            notes: item.notes
+          }))
+        });
+      }
+
+      if (dto.categoryIds) {
+        await tx.gameCategory.deleteMany({ where: { gameId: existingGame.id } });
+        if (dto.categoryIds.length > 0) {
+          await tx.gameCategory.createMany({
+            data: dto.categoryIds.map((categoryId) => ({ gameId: existingGame.id, categoryId }))
+          });
+        }
+      }
+
+      if (dto.assets) {
+        await tx.gameAsset.deleteMany({ where: { gameId: existingGame.id } });
+        if (dto.assets.length > 0) {
+          await tx.gameAsset.createMany({
+            data: dto.assets.map((asset) => ({
+              gameId: existingGame.id,
+              kind: asset.kind,
+              sourceType: asset.sourceType,
+              publicUrl: asset.publicUrl,
+              sourceUrl: asset.sourceUrl,
+              credit: asset.credit,
+              licenseLabel: asset.licenseLabel,
+              storageProvider: asset.storageProvider,
+              bucket: asset.bucket,
+              objectKey: asset.objectKey,
+              contentType: asset.contentType,
+              altText: asset.altText,
+              sortOrder: asset.sortOrder ?? 0
+            }))
+          });
+        }
+      }
+
+      if (dto.cardAdaptations) {
+        await tx.cardAdaptation.deleteMany({ where: { gameId: existingGame.id } });
+        for (const adaptation of dto.cardAdaptations) {
+          await tx.cardAdaptation.create({
+            data: {
+              gameId: existingGame.id,
+              deckType: adaptation.deckType,
+              uniqueCardsNeeded: adaptation.uniqueCardsNeeded,
+              totalCardsNeeded: adaptation.totalCardsNeeded,
+              notes: adaptation.notes,
+              mappings: {
+                create: adaptation.mappings.map((mapping) => ({
+                  sourceCard: mapping.sourceCard,
+                  meaning: mapping.meaning,
+                  quantity: mapping.quantity
+                }))
+              }
+            }
+          });
+        }
+      }
+    });
+
+    await this.invalidateGameCaches(slug);
+    if (nextSlug && nextSlug !== slug) await this.invalidateGameCaches(nextSlug);
+    return this.findBySlug(nextSlug ?? slug);
   }
 
   async query(filters: QueryGamesDto) {
+    return this.queryByStatus(filters, GameStatus.Approved);
+  }
+
+  async moderationQueue(filters: QueryGamesDto) {
+    return this.queryByStatus(filters, GameStatus.Pending);
+  }
+
+  async filters() {
+    const [materials, categories, aggregate] = await this.prisma.$transaction([
+      this.prisma.material.findMany({
+        where: { deletedAt: null },
+        orderBy: [{ kind: "asc" }, { name: "asc" }]
+      }),
+      this.prisma.category.findMany({
+        where: { deletedAt: null },
+        orderBy: { name: "asc" }
+      }),
+      this.prisma.game.aggregate({
+        where: { status: GameStatus.Approved, deletedAt: null },
+        _min: { minPlayers: true, minAge: true },
+        _max: { maxPlayers: true, minAge: true }
+      })
+    ]);
+
+    return {
+      categories: categories.map((category) => ({
+        slug: category.slug,
+        name: category.name
+      })),
+      materials: materials.map((material) => ({
+        slug: material.slug,
+        name: material.name,
+        kind: material.kind,
+        requirementType: RequirementType.Required,
+        quantity: null,
+        notes: null
+      })),
+      difficulties: ["easy", "medium", "hard"],
+      minPlayers: aggregate._min.minPlayers ?? 1,
+      maxPlayers: aggregate._max.maxPlayers ?? 1,
+      minAge: aggregate._min.minAge ?? 0,
+      maxAge: aggregate._max.minAge ?? 0
+    };
+  }
+
+  async moderate(slug: string, dto: ModerateGameDto) {
+    const existingGame = await this.findIdBySlug(slug);
+    await this.prisma.game.update({
+      where: { id: existingGame.id },
+      data: { status: dto.status }
+    });
+    await this.invalidateGameCaches(slug);
+    return this.findBySlug(slug);
+  }
+
+  private async queryByStatus(filters: QueryGamesDto, status: GameStatus) {
     const materialIds = filters.materialIds ?? [];
     const materialSlugs = filters.materialSlugs ?? [];
-    const limit = filters.limit ?? 30;
+    const pageOptions = resolvePageOptions(filters);
+    const where: Prisma.GameWhereInput = {
+      status,
+      deletedAt: null,
+      ...(filters.query
+        ? {
+            OR: [
+              { title: { contains: filters.query, mode: "insensitive" } },
+              { summaryMd: { contains: filters.query, mode: "insensitive" } },
+              { rulesMd: { contains: filters.query, mode: "insensitive" } }
+            ]
+          }
+        : {}),
+      ...(filters.players ? { minPlayers: { lte: filters.players }, maxPlayers: { gte: filters.players } } : {}),
+      ...(filters.maxAge ? { minAge: { lte: filters.maxAge } } : {}),
+      ...(filters.difficulty ? { difficulty: filters.difficulty } : {}),
+      ...(filters.outdoorOnly ? { outdoor: true } : {})
+    };
 
-    const query = this.games
-      .createQueryBuilder("game")
-      .leftJoinAndSelect("game.materials", "gameMaterial")
-      .leftJoinAndSelect("gameMaterial.material", "material")
-      .leftJoinAndSelect("game.assets", "asset")
-      .where("game.status = :status", { status: GameStatus.Approved })
-      .andWhere("game.deleted_at IS NULL");
+    const [total, games] = await this.prisma.$transaction([
+      this.prisma.game.count({ where }),
+      this.prisma.game.findMany({
+        where,
+        include: catalogInclude,
+        orderBy: [{ ratingAverage: "desc" }, { createdAt: "desc" }],
+        skip: materialIds.length > 0 || materialSlugs.length > 0 ? 0 : pageOptions.skip,
+        take:
+          materialIds.length > 0 || materialSlugs.length > 0
+            ? Math.max(100, pageOptions.skip + pageOptions.limit)
+            : pageOptions.limit
+      })
+    ]);
 
-    if (filters.query) {
-      query.andWhere("(game.title ILIKE :term OR game.summary_md ILIKE :term OR game.rules_md ILIKE :term)", {
-        term: `%${filters.query}%`
-      });
-    }
+    const sortedGames =
+      materialIds.length > 0 || materialSlugs.length > 0
+        ? games
+            .map((game) => ({
+              game,
+              matchingMaterialCount: game.materials.filter(
+                (gameMaterial) =>
+                  gameMaterial.requirementType === RequirementType.Required &&
+                  (materialIds.includes(gameMaterial.materialId) || materialSlugs.includes(gameMaterial.material.slug))
+              ).length
+            }))
+            .sort((left, right) => {
+              if (right.matchingMaterialCount !== left.matchingMaterialCount) {
+                return right.matchingMaterialCount - left.matchingMaterialCount;
+              }
+              return Number(right.game.ratingAverage) - Number(left.game.ratingAverage);
+            })
+            .slice(pageOptions.skip, pageOptions.skip + pageOptions.limit)
+            .map(({ game }) => game)
+        : games;
 
-    if (filters.players) {
-      query.andWhere(":players BETWEEN game.min_players AND game.max_players", { players: filters.players });
-    }
-
-    if (filters.maxAge) {
-      query.andWhere("game.min_age <= :maxAge", { maxAge: filters.maxAge });
-    }
-
-    if (filters.difficulty) {
-      query.andWhere("game.difficulty = :difficulty", { difficulty: filters.difficulty });
-    }
-
-    if (filters.outdoorOnly) {
-      query.andWhere("game.outdoor = true");
-    }
-
-    if (materialIds.length > 0 || materialSlugs.length > 0) {
-      query
-        .addSelect(
-          `COUNT(DISTINCT CASE WHEN gameMaterial.requirement_type = :required AND (gameMaterial.material_id IN (:...materialIds) OR material.slug IN (:...materialSlugs)) THEN gameMaterial.material_id END)`,
-          "matching_material_count"
-        )
-        .addSelect(
-          `COUNT(DISTINCT CASE WHEN gameMaterial.requirement_type = :required THEN gameMaterial.material_id END)`,
-          "required_material_count"
-        )
-        .setParameters({
-          materialIds: materialIds.length > 0 ? materialIds : ["00000000-0000-0000-0000-000000000000"],
-          materialSlugs: materialSlugs.length > 0 ? materialSlugs : ["__none__"],
-          required: RequirementType.Required
-        })
-        .groupBy("game.id")
-        .addGroupBy("gameMaterial.id")
-        .addGroupBy("material.id")
-        .addGroupBy("asset.id")
-        .orderBy("matching_material_count", "DESC")
-        .addOrderBy("game.rating_average", "DESC");
-    } else {
-      query.orderBy("game.rating_average", "DESC").addOrderBy("game.created_at", "DESC");
-    }
-
-    const games = await query.getMany();
-    return games.slice(0, limit);
+    return paginatedResponse(sortedGames.map(mapCatalogGame), total, pageOptions);
   }
 
   async findBySlug(slug: string) {
-    const game = await this.games.findOne({
-      where: { slug },
-      relations: {
-        materials: { material: true },
-        categories: { category: true },
-        cardAdaptations: { mappings: true },
-        assets: true,
-        ratings: true,
-        comments: true
-      }
+    const game = await this.prisma.game.findFirst({
+      where: { slug, deletedAt: null },
+      include: gameInclude
+    });
+
+    if (!game) {
+      throw new NotFoundException("Game not found.");
+    }
+
+    const response = mapDetailGame(game);
+    return response;
+  }
+
+  async findIdBySlug(slug: string) {
+    const game = await this.prisma.game.findFirst({
+      where: { slug, deletedAt: null },
+      select: { id: true, slug: true }
     });
 
     if (!game) {
@@ -197,61 +391,86 @@ export class GamesService {
     return game;
   }
 
-  async rate(slug: string, dto: RateGameDto) {
-    const game = await this.findBySlug(slug);
-
-    await this.dataSource.transaction(async (manager) => {
-      const ratingRepository = manager.getRepository(GameRatingEntity);
-      const existing = await ratingRepository.findOne({
-        where: {
-          gameId: game.id,
-          userId: dto.userId
-        }
-      });
-
-      await ratingRepository.save({
-        ...(existing ?? {}),
-        gameId: game.id,
-        userId: dto.userId,
-        value: dto.value,
-        comment: dto.comment
-      });
-
-      const aggregate = await ratingRepository
-        .createQueryBuilder("rating")
-        .select("AVG(rating.value)", "average")
-        .addSelect("COUNT(rating.id)", "count")
-        .where("rating.game_id = :gameId", { gameId: game.id })
-        .andWhere("rating.deleted_at IS NULL")
-        .getRawOne<{ average: string; count: string }>();
-
-      await manager.update(GameEntity, game.id, {
-        ratingAverage: Number(aggregate?.average ?? 0).toFixed(2),
-        ratingCount: Number(aggregate?.count ?? 0)
-      });
-    });
-
-    return this.findBySlug(slug);
+  async invalidateGameCaches(slug?: string) {
+    await this.cache.deleteByPattern("games:query:*");
+    await this.cache.deleteByPattern("games:filters:*");
+    await this.cache.deleteByPattern("games:detail:*");
+    if (slug) {
+      await this.cache.del(`games:comments:${slug}`);
+    }
   }
+}
 
-  async comment(slug: string, dto: CreateCommentDto) {
-    const game = await this.findBySlug(slug);
-    const comment = this.comments.create({
-      gameId: game.id,
-      userId: dto.userId,
-      parentId: dto.parentId,
-      bodyMd: dto.bodyMd
-    });
+function mapCatalogGame(game: GameCatalogRecord) {
+  const images = mapAssets(game.assets).filter((asset) => asset.kind === "cover" || asset.kind === "image");
+  return {
+    slug: game.slug,
+    title: game.title,
+    summaryMd: game.summaryMd,
+    ratingAverage: Number(game.ratingAverage),
+    ratingCount: game.ratingCount,
+    coverImage: images[0] ?? null,
+    categories: game.categories.map((item) => ({
+      slug: item.category.slug,
+      name: item.category.name
+    })),
+    materials: game.materials.map((item) => ({
+      slug: item.material.slug,
+      name: item.material.name,
+      kind: item.material.kind,
+      requirementType: item.requirementType,
+      quantity: item.quantity,
+      notes: item.notes
+    })),
+    ratings: mapPublicRatings(game.ratings),
+    minPlayers: game.minPlayers,
+    maxPlayers: game.maxPlayers,
+    minAge: game.minAge,
+    difficulty: game.difficulty,
+    durationMinutes: game.durationMinutes
+  };
+}
 
-    return this.comments.save(comment);
-  }
+function mapDetailGame(game: GameDetailRecord) {
+  const assets = mapAssets(game.assets);
+  const imageAssets = assets.filter((asset) => asset.kind === "cover" || asset.kind === "image");
+  const downloadableAssets = assets.filter((asset) => asset.kind === "printable" || asset.kind === "rules_pdf");
+  const referenceLinks = assets.filter((asset) => asset.kind === "other");
 
-  async listComments(slug: string) {
-    const game = await this.findBySlug(slug);
-    return this.comments.find({
-      where: { gameId: game.id },
-      order: { createdAt: "DESC" },
-      take: 100
-    });
-  }
+  return {
+    ...mapCatalogGame(game),
+    rulesMd: game.rulesMd,
+    galleryImages: imageAssets,
+    downloadableAssets,
+    referenceLinks,
+    ratings: game.ratings
+      ? mapPublicRatings(game.ratings)
+      : []
+  };
+}
+
+function mapPublicRatings(ratings: GameCatalogRecord["ratings"]) {
+  return ratings
+    .filter((rating) => !rating.deletedAt)
+    .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime())
+    .map((rating) => ({
+      value: rating.value,
+      comment: rating.comment
+    }));
+}
+
+function mapAssets(assets: GameCatalogRecord["assets"]) {
+  return assets
+    .filter((asset) => !asset.deletedAt)
+    .sort((left, right) => left.sortOrder - right.sortOrder)
+    .map((asset) => ({
+      kind: asset.kind,
+      sourceType: asset.sourceType,
+      url: asset.publicUrl ?? asset.sourceUrl ?? "",
+      sourceUrl: asset.sourceUrl,
+      credit: asset.credit,
+      licenseLabel: asset.licenseLabel,
+      altText: asset.altText
+    }))
+    .filter((asset) => asset.url.length > 0);
 }

@@ -1,0 +1,6 @@
+ALTER TYPE "MaterialKind" ADD VALUE IF NOT EXISTS 'board';
+ALTER TYPE "MaterialKind" ADD VALUE IF NOT EXISTS 'tiles';
+ALTER TYPE "MaterialKind" ADD VALUE IF NOT EXISTS 'pieces';
+ALTER TYPE "MaterialKind" ADD VALUE IF NOT EXISTS 'blocks';
+ALTER TYPE "MaterialKind" ADD VALUE IF NOT EXISTS 'money';
+ALTER TYPE "MaterialKind" ADD VALUE IF NOT EXISTS 'bags';

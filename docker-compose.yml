@@ -39,12 +39,13 @@ services:
       NODE_ENV: development
       PORT: 3000
       API_PREFIX: api/v1
-      FRONTEND_ORIGIN: "*"
+      FRONTEND_ORIGINS: ${FRONTEND_ORIGINS:-http://localhost:8081,http://127.0.0.1:8081}
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
       DATABASE_USER: quejugamos
       DATABASE_PASSWORD: quejugamos
       DATABASE_NAME: quejugamos
+      DATABASE_URL: postgresql://quejugamos:quejugamos@postgres:5432/quejugamos
       DATABASE_SSL: "false"
       REDIS_HOST: redis
       REDIS_PORT: 6379
