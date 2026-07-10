@@ -307,6 +307,7 @@ export class GamesService {
   private async queryByStatus(filters: QueryGamesDto, status: GameStatus) {
     const materialIds = filters.materialIds ?? [];
     const materialSlugs = filters.materialSlugs ?? [];
+    const hasMaterialFilters = materialIds.length > 0 || materialSlugs.length > 0;
     const pageOptions = resolvePageOptions(filters);
     const where: Prisma.GameWhereInput = {
       status,
@@ -323,7 +324,23 @@ export class GamesService {
       ...(filters.players ? { minPlayers: { lte: filters.players }, maxPlayers: { gte: filters.players } } : {}),
       ...(filters.maxAge ? { minAge: { lte: filters.maxAge } } : {}),
       ...(filters.difficulty ? { difficulty: filters.difficulty } : {}),
-      ...(filters.outdoorOnly ? { outdoor: true } : {})
+      ...(filters.outdoorOnly ? { outdoor: true } : {}),
+      ...(hasMaterialFilters
+        ? {
+            materials: {
+              some: {
+                requirementType: RequirementType.Required,
+                material: {
+                  deletedAt: null,
+                  OR: [
+                    ...(materialIds.length > 0 ? [{ id: { in: materialIds } }] : []),
+                    ...(materialSlugs.length > 0 ? [{ slug: { in: materialSlugs } }] : [])
+                  ]
+                }
+              }
+            }
+          }
+        : {})
     };
 
     const [total, games] = await this.prisma.$transaction([
@@ -332,16 +349,12 @@ export class GamesService {
         where,
         include: catalogInclude,
         orderBy: [{ ratingAverage: "desc" }, { createdAt: "desc" }],
-        skip: materialIds.length > 0 || materialSlugs.length > 0 ? 0 : pageOptions.skip,
-        take:
-          materialIds.length > 0 || materialSlugs.length > 0
-            ? Math.max(100, pageOptions.skip + pageOptions.limit)
-            : pageOptions.limit
+        ...(hasMaterialFilters ? {} : { skip: pageOptions.skip, take: pageOptions.limit })
       })
     ]);
 
     const sortedGames =
-      materialIds.length > 0 || materialSlugs.length > 0
+      hasMaterialFilters
         ? games
             .map((game) => ({
               game,
@@ -355,7 +368,11 @@ export class GamesService {
               if (right.matchingMaterialCount !== left.matchingMaterialCount) {
                 return right.matchingMaterialCount - left.matchingMaterialCount;
               }
-              return Number(right.game.ratingAverage) - Number(left.game.ratingAverage);
+              const ratingDifference = Number(right.game.ratingAverage) - Number(left.game.ratingAverage);
+              if (ratingDifference !== 0) {
+                return ratingDifference;
+              }
+              return right.game.createdAt.getTime() - left.game.createdAt.getTime();
             })
             .slice(pageOptions.skip, pageOptions.skip + pageOptions.limit)
             .map(({ game }) => game)

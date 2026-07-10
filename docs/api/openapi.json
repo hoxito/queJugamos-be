@@ -963,7 +963,7 @@
             "type": "number"
           },
           "materialIds": {
-            "description": "Material UUIDs owned by the player.",
+            "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
             "example": [
               "11111111-1111-1111-1111-111111111111"
             ],
@@ -976,10 +976,10 @@
             "type": "array"
           },
           "materialSlugs": {
-            "description": "Material slugs owned by the player.",
+            "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
             "example": [
-              "cards",
-              "dice"
+              "paper",
+              "pen"
             ],
             "items": {
               "default": "<string>",
@@ -1352,7 +1352,7 @@
             }
           },
           {
-            "description": "Material UUIDs owned by the player.",
+            "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
             "in": "query",
             "name": "materialIds",
             "required": false,
@@ -1370,14 +1370,14 @@
             }
           },
           {
-            "description": "Material slugs owned by the player.",
+            "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
             "in": "query",
             "name": "materialSlugs",
             "required": false,
             "schema": {
               "example": [
-                "cards",
-                "dice"
+                "paper",
+                "pen"
               ],
               "items": {
                 "default": "<string>",
@@ -1795,7 +1795,7 @@
             }
           },
           {
-            "description": "Material UUIDs owned by the player.",
+            "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
             "in": "query",
             "name": "materialIds",
             "required": false,
@@ -1813,14 +1813,14 @@
             }
           },
           {
-            "description": "Material slugs owned by the player.",
+            "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
             "in": "query",
             "name": "materialSlugs",
             "required": false,
             "schema": {
               "example": [
-                "cards",
-                "dice"
+                "paper",
+                "pen"
               ],
               "items": {
                 "default": "<string>",
@@ -1993,7 +1993,7 @@
                     "type": "number"
                   },
                   "materialIds": {
-                    "description": "Material UUIDs owned by the player.",
+                    "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
                     "example": [
                       "11111111-1111-1111-1111-111111111111"
                     ],
@@ -2006,10 +2006,10 @@
                     "type": "array"
                   },
                   "materialSlugs": {
-                    "description": "Material slugs owned by the player.",
+                    "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
                     "example": [
-                      "cards",
-                      "dice"
+                      "paper",
+                      "pen"
                     ],
                     "items": {
                       "default": "<string>",

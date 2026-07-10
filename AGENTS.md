@@ -114,6 +114,11 @@ Referencias base:
 - Cada PR debe contener un solo cambio logico. No mezclar features, fixes, refactors, migraciones, upgrades de dependencias o cambios de documentacion no relacionados en el mismo PR.
 - No agregar "un cambio mas" a un PR existente si no pertenece al alcance original. Crear otra rama y otro PR.
 - Antes de crear o actualizar un PR, confirmar que la rama actual, el upstream y el titulo/alcance del PR describen el mismo cambio.
+- Al terminar cambios de codigo, crear o actualizar un PR salvo que el usuario indique explicitamente que no se debe pushear, falten credenciales o el arbol tenga cambios ajenos que hagan inseguro incluirlos.
+- Cada respuesta final despues de cambios debe indicar el estado del PR. Si existe PR, incluir el link y pedir explicitamente al usuario que lo revise. Si no existe PR, explicar por que no se creo y que falta para crearlo.
+- El PR debe explicar alcance, cambios de contrato/API, migraciones o seed data, pruebas ejecutadas, riesgos y follow-ups.
+- PRs con dependencias nuevas deben incluir justificacion, auditoria y confirmar pinning exacto.
+- PRs con cambios de contrato deben actualizar Swagger/OpenAPI, colecciones en `docs/api` y documentacion relacionada.
 - Los commits deben ser chicos, coherentes y con mensaje imperativo.
 - No reescribir historia compartida sin coordinacion.
 

@@ -46,6 +46,7 @@ Services:
 Use `POST /api/v1/games/query` for complex searches by materials, players, age and difficulty.
 
 `QUERY` is documented in `docs/HTTP_QUERY.md`; it is not the primary endpoint because NestJS/adapters/proxies do not support it consistently yet.
+Search behavior is documented in `docs/SEARCH.md`. Material filters are applied by the backend against the full catalog, ranked by matching required materials, and only then paginated. Frontend and mobile clients must not filter materials locally over an already paginated page.
 
 Catalog responses are paginated and intentionally lightweight:
 
@@ -107,6 +108,7 @@ GAMES_FILTERS_CACHE_MAX_ENTRIES
 - [ERD](docs/ERD.md)
 - [Migraciones Prisma](docs/MIGRATIONS.md)
 - [HTTP QUERY](docs/HTTP_QUERY.md)
+- [Search behavior](docs/SEARCH.md)
 - [API collections](docs/API_COLLECTIONS.md)
 - [Errores RFC 9457](docs/ERRORS.md)
 - [Autenticacion OAuth2](docs/AUTH.md)

@@ -13,7 +13,8 @@ export class QueryGamesDto {
   query?: string;
 
   @ApiPropertyOptional({
-    description: "Material UUIDs owned by the player.",
+    description:
+      "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
     type: [String],
     example: ["11111111-1111-1111-1111-111111111111"]
   })
@@ -22,9 +23,10 @@ export class QueryGamesDto {
   materialIds?: string[];
 
   @ApiPropertyOptional({
-    description: "Material slugs owned by the player.",
+    description:
+      "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
     type: [String],
-    example: ["cards", "dice"]
+    example: ["paper", "pen"]
   })
   @IsOptional()
   @IsArray()
