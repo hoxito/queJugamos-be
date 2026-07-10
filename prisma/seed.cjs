@@ -287,12 +287,18 @@ async function main() {
       });
     }
 
-    const ratings = ratingsFor(ratingTarget).map((value, ratingIndex) => ({
-      gameId: savedGame.id,
-      userId: syntheticUsers[ratingIndex].id,
-      value,
-      comment: commentFor(value)
-    }));
+    const usedRatingComments = new Set();
+    const ratings = ratingsFor(ratingTarget).map((value, ratingIndex) => {
+      const comment = commentFor(value);
+      const shouldKeepComment = !usedRatingComments.has(comment);
+      usedRatingComments.add(comment);
+      return {
+        gameId: savedGame.id,
+        userId: syntheticUsers[ratingIndex].id,
+        value,
+        comment: shouldKeepComment ? comment : null
+      };
+    });
     await prisma.gameRating.createMany({ data: ratings });
 
     const average = ratings.reduce((sum, rating) => sum + rating.value, 0) / ratings.length;

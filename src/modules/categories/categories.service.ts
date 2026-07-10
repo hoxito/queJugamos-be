@@ -25,10 +25,15 @@ export class CategoriesService {
   }
 
   async create(dto: CreateCategoryDto) {
-    const category = await this.prisma.category.create({
-      data: {
+    const slug = dto.slug ? toSlug(dto.slug) : toSlug(dto.name);
+    const category = await this.prisma.category.upsert({
+      where: { slug },
+      update: {
+        name: dto.name
+      },
+      create: {
         name: dto.name,
-        slug: dto.slug ? toSlug(dto.slug) : toSlug(dto.name)
+        slug
       }
     });
     await this.cache.del("categories:list");

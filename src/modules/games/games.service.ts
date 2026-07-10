@@ -362,11 +362,26 @@ export class GamesService {
                 (gameMaterial) =>
                   gameMaterial.requirementType === RequirementType.Required &&
                   (materialIds.includes(gameMaterial.materialId) || materialSlugs.includes(gameMaterial.material.slug))
+              ).length,
+              missingRequiredMaterialCount: game.materials.filter(
+                (gameMaterial) =>
+                  gameMaterial.requirementType === RequirementType.Required &&
+                  !materialIds.includes(gameMaterial.materialId) &&
+                  !materialSlugs.includes(gameMaterial.material.slug)
               ).length
             }))
             .sort((left, right) => {
+              if (left.missingRequiredMaterialCount === 0 && right.missingRequiredMaterialCount > 0) {
+                return -1;
+              }
+              if (right.missingRequiredMaterialCount === 0 && left.missingRequiredMaterialCount > 0) {
+                return 1;
+              }
               if (right.matchingMaterialCount !== left.matchingMaterialCount) {
                 return right.matchingMaterialCount - left.matchingMaterialCount;
+              }
+              if (left.missingRequiredMaterialCount !== right.missingRequiredMaterialCount) {
+                return left.missingRequiredMaterialCount - right.missingRequiredMaterialCount;
               }
               const ratingDifference = Number(right.game.ratingAverage) - Number(left.game.ratingAverage);
               if (ratingDifference !== 0) {

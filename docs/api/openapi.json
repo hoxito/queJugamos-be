@@ -976,7 +976,7 @@
             "type": "array"
           },
           "materialSlugs": {
-            "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+            "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
             "example": [
               "paper",
               "pen"
@@ -1331,6 +1331,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Idempotently create or update a category. Admin only.",
         "tags": [
           "categories"
         ]
@@ -1370,7 +1376,7 @@
             }
           },
           {
-            "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+            "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
             "in": "query",
             "name": "materialSlugs",
             "required": false,
@@ -1813,7 +1819,7 @@
             }
           },
           {
-            "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+            "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
             "in": "query",
             "name": "materialSlugs",
             "required": false,
@@ -2006,7 +2012,7 @@
                     "type": "array"
                   },
                   "materialSlugs": {
-                    "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+                    "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                     "example": [
                       "paper",
                       "pen"
@@ -2862,6 +2868,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Idempotently create or update a material. Admin only.",
         "tags": [
           "materials"
         ]
@@ -2876,6 +2888,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List users. Admin only.",
         "tags": [
           "users"
         ]
@@ -2924,6 +2942,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Idempotently provision or update an OAuth-backed user. Admin only.",
         "tags": [
           "users"
         ]

@@ -1,7 +1,20 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Difficulty } from "../domain/game.enums";
+
+const toStringArray = ({ value }: { value: unknown }) => {
+  if (value === undefined || value === null || value === "") return undefined;
+  const values = Array.isArray(value) ? value : [value];
+  return values.flatMap((item) =>
+    typeof item === "string"
+      ? item
+          .split(",")
+          .map((part) => part.trim())
+          .filter(Boolean)
+      : []
+  );
+};
 
 export class QueryGamesDto {
   @ApiPropertyOptional({
@@ -15,21 +28,27 @@ export class QueryGamesDto {
   @ApiPropertyOptional({
     description:
       "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
-    type: [String],
+    type: String,
+    isArray: true,
     example: ["11111111-1111-1111-1111-111111111111"]
   })
   @IsOptional()
+  @Transform(toStringArray)
   @IsArray()
+  @IsString({ each: true })
   materialIds?: string[];
 
   @ApiPropertyOptional({
     description:
-      "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
-    type: [String],
+      "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
+    type: String,
+    isArray: true,
     example: ["paper", "pen"]
   })
   @IsOptional()
+  @Transform(toStringArray)
   @IsArray()
+  @IsString({ each: true })
   materialSlugs?: string[];
 
   @ApiPropertyOptional({

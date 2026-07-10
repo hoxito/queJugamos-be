@@ -15,8 +15,13 @@ export class UsersService {
   }
 
   create(dto: CreateUserDto) {
-    return this.prisma.user.create({
-      data: {
+    return this.prisma.user.upsert({
+      where: { email: dto.email },
+      update: {
+        displayName: dto.displayName,
+        ...(dto.role ? { role: dto.role } : {})
+      },
+      create: {
         email: dto.email,
         displayName: dto.displayName,
         role: dto.role ?? UserRole.Player

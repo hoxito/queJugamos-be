@@ -12,6 +12,7 @@
     "import:curated:bgg": "node scripts/import-curated-games.mjs --bgg",
     "api:docs:generate": "pnpm build && node scripts/generate-api-docs.mjs",
     "api:docs:check": "pnpm build && node scripts/generate-api-docs.mjs --check",
+    "post-feature": "pnpm api:docs:generate && pnpm typecheck && pnpm test && pnpm api:docs:check",
     "hooks:install": "husky",
     "prepare": "husky",
     "prisma:generate": "prisma generate",

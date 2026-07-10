@@ -80,4 +80,38 @@ describe("GamesService.query", () => {
     assert.match(JSON.stringify(countArgs), /"paper"/);
     assert.match(JSON.stringify(countArgs), /"pen"/);
   });
+
+  it("ranks fully playable material matches before games that require extra materials", async () => {
+    const games = [
+      game(
+        "matches-three-but-needs-more",
+        5,
+        [material("paper"), material("pen"), material("timer"), material("dice")],
+        new Date("2026-01-03T00:00:00.000Z")
+      ),
+      game(
+        "fully-playable-three",
+        3,
+        [material("paper"), material("pen"), material("timer")],
+        new Date("2026-01-01T00:00:00.000Z")
+      ),
+      game("fully-playable-two", 4, [material("paper"), material("pen")], new Date("2026-01-02T00:00:00.000Z"))
+    ];
+    const prisma = {
+      game: {
+        count: () => Promise.resolve(games.length),
+        findMany: () => Promise.resolve(games)
+      },
+      $transaction: (operations: Promise<unknown>[]) => Promise.all(operations)
+    };
+    const service = new GamesService(prisma as never, {} as never);
+
+    const response = await service.query({ materialSlugs: ["paper", "pen", "timer"], page: 1, limit: 3 });
+
+    assert.deepEqual(response.items.map((item) => item.slug), [
+      "fully-playable-three",
+      "fully-playable-two",
+      "matches-three-but-needs-more"
+    ]);
+  });
 });

@@ -119,6 +119,12 @@ Generate committed Swagger/OpenAPI and Postman collection files with:
 pnpm api:docs:generate
 ```
 
+Before opening or updating a backend PR, run the automated post-feature trigger when possible:
+
+```bash
+pnpm post-feature
+```
+
 ## Curated game import
 
 The curated dataset lives in `database/curated-games.json`.

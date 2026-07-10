@@ -74,6 +74,15 @@ Referencias base:
 - Documentar status codes esperados, errores relevantes y DTOs de respuesta.
 - Mantener `README.md` y documentos en `docs/` alineados con cambios de rutas, variables, comandos o contratos.
 - No introducir endpoints no documentados salvo que sean internos y se justifique explicitamente.
+- La documentacion API versionada se genera con `pnpm api:docs:generate`: compila Nest, crea `docs/api/openapi.json` desde Swagger y genera `docs/api/postman_collection.json` desde OpenAPI con `openapi-to-postmanv2`.
+- Si se modifica un controller, DTO, Swagger decorator, ruta o contrato HTTP, ejecutar `pnpm api:docs:generate` y commitear los archivos generados.
+
+## Automatizacion operativa
+
+- Si una tarea requiere pasos repetibles y programables, agregar o reutilizar scripts en vez de gastar prompts/tokens repitiendo instrucciones manuales.
+- El script `pnpm post-feature` es el trigger esperado antes de crear o actualizar PRs de backend: regenera Swagger/Postman, ejecuta typecheck, ejecuta tests y verifica que las colecciones queden actualizadas.
+- Si `pnpm post-feature` falla por tests o entorno local, corregir la causa cuando sea parte del cambio. Si el fallo es externo o conocido, documentarlo en la respuesta final y en el PR.
+- No automatizar pasos destructivos ni acciones que requieran criterio de producto sin una aprobacion explicita.
 
 ## Testing obligatorio
 
@@ -119,6 +128,7 @@ Referencias base:
 - El PR debe explicar alcance, cambios de contrato/API, migraciones o seed data, pruebas ejecutadas, riesgos y follow-ups.
 - PRs con dependencias nuevas deben incluir justificacion, auditoria y confirmar pinning exacto.
 - PRs con cambios de contrato deben actualizar Swagger/OpenAPI, colecciones en `docs/api` y documentacion relacionada.
+- Antes de pushear un PR de backend, preferir `pnpm post-feature` sobre comandos sueltos cuando el cambio toca codigo o contrato API.
 - Los commits deben ser chicos, coherentes y con mensaje imperativo.
 - No reescribir historia compartida sin coordinacion.
 

@@ -356,12 +356,20 @@
         },
         {
           "event": [],
-          "name": "Materials Controller create",
+          "name": "Idempotently create or update a material. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "body": {
               "mode": "raw",
               "options": {
@@ -379,7 +387,7 @@
               }
             ],
             "method": "POST",
-            "name": "Materials Controller create",
+            "name": "Idempotently create or update a material. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -415,6 +423,16 @@
                   },
                   "raw": "{\n  \"name\": \"Papel\",\n  \"kind\": \"paper\",\n  \"slug\": \"paper\",\n  \"aliases\": [\n    \"hoja\",\n    \"cuaderno\"\n  ]\n}"
                 },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -501,12 +519,20 @@
         },
         {
           "event": [],
-          "name": "Categories Controller create",
+          "name": "Idempotently create or update a category. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "body": {
               "mode": "raw",
               "options": {
@@ -524,7 +550,7 @@
               }
             ],
             "method": "POST",
-            "name": "Categories Controller create",
+            "name": "Idempotently create or update a category. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -560,6 +586,16 @@
                   },
                   "raw": "{\n  \"name\": \"Cartas\",\n  \"slug\": \"cartas\"\n}"
                 },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -590,15 +626,23 @@
       "item": [
         {
           "event": [],
-          "name": "Users Controller list",
+          "name": "List users. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "description": {},
             "method": "GET",
-            "name": "Users Controller list",
+            "name": "List users. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -626,6 +670,16 @@
               ],
               "originalRequest": {
                 "body": {},
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "GET",
                 "url": {
                   "host": [
@@ -646,12 +700,20 @@
         },
         {
           "event": [],
-          "name": "Users Controller create",
+          "name": "Idempotently provision or update an OAuth-backed user. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "body": {
               "mode": "raw",
               "options": {
@@ -669,7 +731,7 @@
               }
             ],
             "method": "POST",
-            "name": "Users Controller create",
+            "name": "Idempotently provision or update an OAuth-backed user. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -705,6 +767,16 @@
                   },
                   "raw": "{\n  \"email\": \"player@quejugamos.local\",\n  \"displayName\": \"Player One\",\n  \"role\": \"player\"\n}"
                 },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -888,13 +960,13 @@
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
@@ -1332,13 +1404,13 @@
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs selected by the user. Games with more matching required materials are ranked first before pagination.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"

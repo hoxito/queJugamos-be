@@ -8,7 +8,7 @@ Authentication currently lives in the NestJS monolith, but it is intentionally i
 - `GET /api/v1/auth/google/callback` exchanges the OAuth2 code and redirects to the frontend auth callback with an API bearer token in the URL fragment.
 - `GET /api/v1/auth/me` returns the authenticated user.
 
-The API bearer token is a JWT signed by this monolith. Send it as:
+The API bearer token is a JWT signed by this monolith with `HS256`, issuer and audience validation. `AUTH_JWT_SECRET` must be a high-entropy secret with at least 32 characters. Send it as:
 
 ```text
 Authorization: Bearer <token>
@@ -67,8 +67,12 @@ Only enable this behind a trusted gateway that strips incoming client-provided a
 
 Admins are users with `role = admin`. Admin-only endpoints currently include:
 
+- `GET /api/v1/users`
+- `POST /api/v1/users`
 - `POST /api/v1/games`
 - `PATCH /api/v1/games/:slug`
+
+User provisioning is admin-only and idempotent by email. Public self-service users are created through OAuth2 login, not by posting an email/password-less user directly.
 
 Admins can modify game manual text, rules source URL, images, video tutorials through `assets`, materials, categories and logical attributes such as players, age, difficulty, indoor/outdoor and publication status.
 
