@@ -107,7 +107,6 @@ GAMES_FILTERS_CACHE_MAX_ENTRIES
 - [Data model](docs/DATA_MODEL.md)
 - [ERD](docs/ERD.md)
 - [Prisma migrations](docs/MIGRATIONS.md)
-- [API endpoints](docs/API_ENDPOINTS.md)
 - [HTTP QUERY](docs/HTTP_QUERY.md)
 - [Search behavior](docs/SEARCH.md)
 - [API collections](docs/API_COLLECTIONS.md)
