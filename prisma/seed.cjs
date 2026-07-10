@@ -161,14 +161,6 @@ const materialDetails = {
   "train-pieces": ["Train pieces", "pieces", 45, "Plastic train pieces."]
 };
 
-const coverImages = [
-  "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1547638375-ebf04735d792?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1611996575749-79a3a250f948?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80"
-];
-
 async function main() {
   const curatedGames = JSON.parse(await readFile(path.join(__dirname, "..", "database", "curated-games.json"), "utf8"));
   const games = [...localGames, ...curatedGames];
@@ -215,7 +207,7 @@ async function main() {
 
   const materialBySlug = new Map((await prisma.material.findMany()).map((material) => [material.slug, material.id]));
 
-  for (const [index, game] of games.entries()) {
+  for (const game of games) {
     const metadata = metadataFor(game);
     const categories = game.categories ?? categoriesFor(game);
     const ratingTarget = game.ratingTarget ?? ratingTargets[game.slug] ?? targetFor(categories, metadata.difficulty);
@@ -278,45 +270,35 @@ async function main() {
         .map((categoryId) => ({ gameId: savedGame.id, categoryId }))
     });
 
-    await prisma.gameAsset.createMany({
-      data: [
-        {
+    if (game.rulesSourceUrl) {
+      await prisma.gameAsset.create({
+        data: {
           gameId: savedGame.id,
-          kind: "cover",
+          kind: "other",
           sourceType: "manual_url",
-          publicUrl: coverImages[index % coverImages.length],
-          sourceUrl: "https://unsplash.com/s/photos/board-game",
-          credit: "Unsplash",
-          licenseLabel: "Unsplash License",
-          contentType: "image/jpeg",
-          altText: `${game.title} tabletop cover image`,
-          sortOrder: 0
-        },
-        ...(game.rulesSourceUrl
-          ? [
-              {
-                gameId: savedGame.id,
-                kind: "other",
-                sourceType: "manual_url",
-                publicUrl: game.rulesSourceUrl,
-                sourceUrl: game.rulesSourceUrl,
-                credit: "Wikipedia",
-                licenseLabel: "External HTML reference",
-                contentType: "text/html",
-                altText: `${game.title} rules reference`,
-                sortOrder: 100
-              }
-            ]
-          : [])
-      ]
-    });
+          publicUrl: game.rulesSourceUrl,
+          sourceUrl: game.rulesSourceUrl,
+          credit: "Wikipedia",
+          licenseLabel: "External HTML reference",
+          contentType: "text/html",
+          altText: `${game.title} rules reference`,
+          sortOrder: 100
+        }
+      });
+    }
 
-    const ratings = ratingsFor(ratingTarget).map((value, ratingIndex) => ({
-      gameId: savedGame.id,
-      userId: syntheticUsers[ratingIndex].id,
-      value,
-      comment: commentFor(value)
-    }));
+    const usedRatingComments = new Set();
+    const ratings = ratingsFor(ratingTarget).map((value, ratingIndex) => {
+      const comment = commentFor(value);
+      const shouldKeepComment = !usedRatingComments.has(comment);
+      usedRatingComments.add(comment);
+      return {
+        gameId: savedGame.id,
+        userId: syntheticUsers[ratingIndex].id,
+        value,
+        comment: shouldKeepComment ? comment : null
+      };
+    });
     await prisma.gameRating.createMany({ data: ratings });
 
     const average = ratings.reduce((sum, rating) => sum + rating.value, 0) / ratings.length;

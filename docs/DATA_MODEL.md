@@ -1,31 +1,31 @@
-# Modelo de datos
+# Data Model
 
-La fuente de verdad del schema es `prisma/schema.prisma`. Las migraciones versionadas viven en `prisma/migrations` y el seed idempotente en `prisma/seed.cjs`.
+The source of truth for the schema is `prisma/schema.prisma`. Versioned migrations live in `prisma/migrations`, and the idempotent seed lives in `prisma/seed.cjs`.
 
 ## Slug
 
-Un `slug` es un identificador legible para URLs, derivado de un nombre humano y unico por entidad publica.
+A `slug` is a human-readable URL identifier derived from a name and unique per public entity.
 
-Ejemplos:
+Examples:
 
 - `Tateti` -> `tateti`
-- `Gatitos explosivos casero` -> `gatitos-explosivos-casero`
-- `Mazo comun` -> `mazo-comun`
+- `Homemade Exploding Kittens` -> `homemade-exploding-kittens`
+- `Common Deck` -> `common-deck`
 
-No reemplaza al `id` UUID. El UUID es la identidad interna estable; el slug sirve para rutas, SEO, deep links y URLs compartibles.
+It does not replace the UUID `id`. The UUID is the stable internal identity; the slug is for routes, SEO, deep links, and shareable URLs.
 
-## Borrado logico
+## Soft Delete
 
-Las entidades editables o visibles por usuarios tienen `deleted_at`. Esto permite ocultar contenido sin romper historiales, ratings, comentarios, revisiones o referencias de archivos.
+Editable or user-visible entities have `deleted_at`. This lets the API hide content without breaking histories, ratings, comments, reviews, or file references.
 
 ## Markdown
 
-Los textos largos se guardan como Markdown:
+Long text is stored as Markdown:
 
-- `summary_md`: resumen con estilos simples.
-- `rules_md`: reglas completas o version extendida.
+- `summary_md`: short summary with simple formatting.
+- `rules_md`: complete rules or extended version.
 
-La app debe renderizar Markdown sanitizado. No se debe aceptar HTML arbitrario sin sanitizacion.
+Clients must render sanitized Markdown. Arbitrary HTML must not be accepted without sanitization.
 
 ## Game
 
@@ -72,7 +72,7 @@ type Material = {
 
 ## GameAsset
 
-Los archivos de un juego se modelan de forma vendor-agnostic. Puede ser una URL manual o un objeto en S3, R2, Azure Blob, GCS, Supabase Storage, etc.
+Game files are modeled in a vendor-agnostic way. An asset can be a manual URL or an object in S3, R2, Azure Blob, GCS, Supabase Storage, or another compatible provider.
 
 ```ts
 type GameAsset = {
@@ -152,7 +152,7 @@ type PaginatedGames = {
 };
 ```
 
-Catalog items intentionally omit internal ids and timestamps. `GET /games/:slug` returns `GameDetail`, which adds `rulesMd`, `galleryImages`, `downloadableAssets`, `referenceLinks` and public ratings.
+Catalog items intentionally omit internal ids and timestamps. `GET /games/:slug` returns `GameDetail`, which adds `rulesMd`, `galleryImages`, `downloadableAssets`, `referenceLinks`, and public ratings.
 
 ## Comment
 
@@ -167,18 +167,18 @@ type GameComment = {
 };
 ```
 
-## Indices recomendados
+## Recommended Indexes
 
-- `games.slug` unico.
+- `games.slug` unique.
 - `games.status`, `games.deleted_at`.
 - `games.min_players`, `games.max_players`, `games.min_age`, `games.difficulty`, `games.outdoor`.
-- `materials.slug` unico.
+- `materials.slug` unique.
 - `materials.kind`.
 - `game_materials.material_id`.
 - `game_materials.game_id`.
 - `game_materials.material_id, requirement_type`.
 - `game_categories.category_id`.
 - `game_ratings.game_id`.
-- `game_ratings.game_id, user_id` unico cuando `deleted_at IS NULL`.
+- `game_ratings.game_id, user_id` unique when `deleted_at IS NULL`.
 - `game_comments.game_id, created_at`.
 - `game_assets.game_id, kind`.

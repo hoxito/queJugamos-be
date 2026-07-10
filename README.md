@@ -1,8 +1,8 @@
 # queJugamos-be
 
-Backend NestJS para el catalogo de QueJugamos.
+NestJS backend for the QueJugamos catalog.
 
-Este repo es independiente del frontend para evitar repositorios Git anidados o superpuestos.
+This repository is independent from the frontend to avoid nested or overlapping Git repositories.
 
 ## Run locally
 
@@ -46,6 +46,7 @@ Services:
 Use `POST /api/v1/games/query` for complex searches by materials, players, age and difficulty.
 
 `QUERY` is documented in `docs/HTTP_QUERY.md`; it is not the primary endpoint because NestJS/adapters/proxies do not support it consistently yet.
+Search behavior is documented in `docs/SEARCH.md`. Material filters are applied by the backend against the full catalog, ranked by matching required materials, and only then paginated. Frontend and mobile clients must not filter materials locally over an already paginated page.
 
 Catalog responses are paginated and intentionally lightweight:
 
@@ -103,18 +104,25 @@ GAMES_FILTERS_CACHE_MAX_ENTRIES
 
 ## Documentation
 
-- [Modelo de datos](docs/DATA_MODEL.md)
+- [Data model](docs/DATA_MODEL.md)
 - [ERD](docs/ERD.md)
-- [Migraciones Prisma](docs/MIGRATIONS.md)
+- [Prisma migrations](docs/MIGRATIONS.md)
 - [HTTP QUERY](docs/HTTP_QUERY.md)
+- [Search behavior](docs/SEARCH.md)
 - [API collections](docs/API_COLLECTIONS.md)
-- [Errores RFC 9457](docs/ERRORS.md)
-- [Autenticacion OAuth2](docs/AUTH.md)
+- [RFC 9457 errors](docs/ERRORS.md)
+- [OAuth2 authentication](docs/AUTH.md)
 
 Generate committed Swagger/OpenAPI and Postman collection files with:
 
 ```bash
 pnpm api:docs:generate
+```
+
+Before opening or updating a backend PR, run the automated post-feature trigger when possible:
+
+```bash
+pnpm post-feature
 ```
 
 ## Curated game import

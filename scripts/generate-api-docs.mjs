@@ -57,20 +57,28 @@ async function generateOpenApiDocument() {
   const { AppModule } = require("../dist/app.module");
   const { configureApiApp, createOpenApiDocument, defaultApiPrefix } = require("../dist/openapi");
   const apiPrefix = process.env.API_PREFIX ?? defaultApiPrefix;
+  if (process.env.API_DOCS_DEBUG === "true") console.error("Creating Nest application...");
   const app = await NestFactory.create(AppModule, { logger: false });
 
   try {
+    if (process.env.API_DOCS_DEBUG === "true") console.error("Configuring API app...");
     configureApiApp(app, apiPrefix);
+    if (process.env.API_DOCS_DEBUG === "true") console.error("Creating Swagger document...");
     return createOpenApiDocument(app);
   } finally {
+    if (process.env.API_DOCS_DEBUG === "true") console.error("Closing Nest application...");
     await app.close();
   }
 }
 
 async function main() {
   const checkOnly = process.argv.includes("--check");
+  const debug = process.env.API_DOCS_DEBUG === "true";
+  if (debug) console.error("Generating OpenAPI document...");
   const document = await generateOpenApiDocument();
+  if (debug) console.error("Converting OpenAPI document to Postman...");
   const postman = await convertOpenApiToPostman(document);
+  if (debug) console.error("Writing API documentation outputs...");
   const outputs = [
     [openApiPath, stableJson(document)],
     [postmanPath, stableJson(postman)]
@@ -101,7 +109,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     await main();
   } catch (error) {
-    console.error(error instanceof Error ? error.message : error);
+    console.error(error instanceof Error ? (error.stack ?? error.message) : error);
     process.exitCode = 1;
   }
 }

@@ -356,12 +356,20 @@
         },
         {
           "event": [],
-          "name": "Materials Controller create",
+          "name": "Idempotently create or update a material. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "body": {
               "mode": "raw",
               "options": {
@@ -379,7 +387,7 @@
               }
             ],
             "method": "POST",
-            "name": "Materials Controller create",
+            "name": "Idempotently create or update a material. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -415,6 +423,16 @@
                   },
                   "raw": "{\n  \"name\": \"Papel\",\n  \"kind\": \"paper\",\n  \"slug\": \"paper\",\n  \"aliases\": [\n    \"hoja\",\n    \"cuaderno\"\n  ]\n}"
                 },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -501,12 +519,20 @@
         },
         {
           "event": [],
-          "name": "Categories Controller create",
+          "name": "Idempotently create or update a category. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "body": {
               "mode": "raw",
               "options": {
@@ -524,7 +550,7 @@
               }
             ],
             "method": "POST",
-            "name": "Categories Controller create",
+            "name": "Idempotently create or update a category. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -560,6 +586,16 @@
                   },
                   "raw": "{\n  \"name\": \"Cartas\",\n  \"slug\": \"cartas\"\n}"
                 },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -590,15 +626,23 @@
       "item": [
         {
           "event": [],
-          "name": "Users Controller list",
+          "name": "List users. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "description": {},
             "method": "GET",
-            "name": "Users Controller list",
+            "name": "List users. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -626,6 +670,16 @@
               ],
               "originalRequest": {
                 "body": {},
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "GET",
                 "url": {
                   "host": [
@@ -646,12 +700,20 @@
         },
         {
           "event": [],
-          "name": "Users Controller create",
+          "name": "Idempotently provision or update an OAuth-backed user. Admin only.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
-            "auth": null,
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
             "body": {
               "mode": "raw",
               "options": {
@@ -669,7 +731,7 @@
               }
             ],
             "method": "POST",
-            "name": "Users Controller create",
+            "name": "Idempotently provision or update an OAuth-backed user. Admin only.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -705,6 +767,16 @@
                   },
                   "raw": "{\n  \"email\": \"player@quejugamos.local\",\n  \"displayName\": \"Player One\",\n  \"role\": \"player\"\n}"
                 },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -876,25 +948,25 @@
                   "value": "<string>"
                 },
                 {
-                  "description": "Material UUIDs owned by the player.",
+                  "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
                   "disabled": false,
                   "key": "materialIds",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material UUIDs owned by the player.",
+                  "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
                   "disabled": false,
                   "key": "materialIds",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs owned by the player.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs owned by the player.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
@@ -980,11 +1052,11 @@
                     },
                     {
                       "key": "materialSlugs",
-                      "value": "cards"
+                      "value": "paper"
                     },
                     {
                       "key": "materialSlugs",
-                      "value": "dice"
+                      "value": "pen"
                     },
                     {
                       "key": "players",
@@ -1179,7 +1251,7 @@
                       "language": "json"
                     }
                   },
-                  "raw": "{\n  \"query\": \"cards\",\n  \"materialIds\": [\n    \"11111111-1111-1111-1111-111111111111\"\n  ],\n  \"materialSlugs\": [\n    \"cards\",\n    \"dice\"\n  ],\n  \"players\": 4,\n  \"maxAge\": 8,\n  \"difficulty\": \"medium\",\n  \"outdoorOnly\": false,\n  \"page\": 1,\n  \"limit\": 10\n}"
+                  "raw": "{\n  \"query\": \"cards\",\n  \"materialIds\": [\n    \"11111111-1111-1111-1111-111111111111\"\n  ],\n  \"materialSlugs\": [\n    \"paper\",\n    \"pen\"\n  ],\n  \"players\": 4,\n  \"maxAge\": 8,\n  \"difficulty\": \"medium\",\n  \"outdoorOnly\": false,\n  \"page\": 1,\n  \"limit\": 10\n}"
                 },
                 "header": [
                   {
@@ -1320,25 +1392,25 @@
                   "value": "<string>"
                 },
                 {
-                  "description": "Material UUIDs owned by the player.",
+                  "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
                   "disabled": false,
                   "key": "materialIds",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material UUIDs owned by the player.",
+                  "description": "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
                   "disabled": false,
                   "key": "materialIds",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs owned by the player.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
                 },
                 {
-                  "description": "Material slugs owned by the player.",
+                  "description": "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
                   "disabled": false,
                   "key": "materialSlugs",
                   "value": "<string>"
@@ -1434,11 +1506,11 @@
                     },
                     {
                       "key": "materialSlugs",
-                      "value": "cards"
+                      "value": "paper"
                     },
                     {
                       "key": "materialSlugs",
-                      "value": "dice"
+                      "value": "pen"
                     },
                     {
                       "key": "players",

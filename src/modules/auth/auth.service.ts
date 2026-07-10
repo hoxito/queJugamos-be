@@ -62,6 +62,7 @@ export class AuthService {
   async verifyAccessToken(token: string): Promise<AuthUser> {
     try {
       const payload = jwt.verify(token, this.jwtSecret(), {
+        algorithms: ["HS256"],
         issuer: this.config.get<string>("AUTH_JWT_ISSUER", "quejugamos"),
         audience: this.config.get<string>("AUTH_JWT_AUDIENCE", "quejugamos-api")
       }) as JwtUserPayload;
@@ -143,6 +144,7 @@ export class AuthService {
       this.jwtSecret(),
       {
         subject: user.id,
+        algorithm: "HS256",
         issuer: this.config.get<string>("AUTH_JWT_ISSUER", "quejugamos"),
         audience: this.config.get<string>("AUTH_JWT_AUDIENCE", "quejugamos-api"),
         expiresIn: this.config.get<SignOptions["expiresIn"]>("AUTH_JWT_EXPIRES_IN", "2h")
@@ -165,7 +167,11 @@ export class AuthService {
   }
 
   private jwtSecret() {
-    return this.required("AUTH_JWT_SECRET");
+    const secret = this.required("AUTH_JWT_SECRET");
+    if (secret.length < 32) {
+      throw new BadRequestException("AUTH_JWT_SECRET must be at least 32 characters.");
+    }
+    return secret;
   }
 
   private required(name: string) {

@@ -25,10 +25,17 @@ export class MaterialsService {
   }
 
   async create(dto: CreateMaterialDto) {
-    const material = await this.prisma.material.create({
-      data: {
+    const slug = dto.slug ? toSlug(dto.slug) : toSlug(dto.name);
+    const material = await this.prisma.material.upsert({
+      where: { slug },
+      update: {
         name: dto.name,
-        slug: dto.slug ? toSlug(dto.slug) : toSlug(dto.name),
+        kind: dto.kind,
+        aliases: dto.aliases ?? []
+      },
+      create: {
+        name: dto.name,
+        slug,
         kind: dto.kind,
         aliases: dto.aliases ?? []
       }
