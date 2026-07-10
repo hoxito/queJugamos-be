@@ -101,6 +101,22 @@ Referencias base:
 - Revisar breaking changes y notas de migracion antes de subir versiones mayores.
 - Ejecutar auditoria de dependencias cuando se agreguen o actualicen paquetes, y documentar cualquier vulnerabilidad aceptada con su motivo y plan de remediacion.
 
+## Git, ramas, push y PR
+
+- Trabajar en ramas descriptivas y acotadas al cambio: `backend/<tema>`, `fix/<tema>`, `chore/<tema>`.
+- No pushear directo a `main`.
+- Antes de commitear o pushear, revisar `git status` y confirmar que no se incluyen cambios de otro agente, conversacion o tarea.
+- Antes de pushear, revisar `git branch --show-current` y confirmar que no se esta usando una rama anterior, heredada o equivocada.
+- Antes de pushear, revisar `git rev-parse --abbrev-ref --symbolic-full-name @{u}` cuando exista upstream y confirmar que el upstream corresponde a la misma rama logica.
+- El nombre de la rama debe coincidir con el alcance del cambio y con el PR que se va a crear o actualizar.
+- Si el nombre local y el upstream no coinciden, detenerse y corregir la rama o pedir confirmacion antes de pushear.
+- No pushear desde una rama reutilizada si el cambio actual no corresponde exactamente a esa rama. Crear una rama nueva y descriptiva antes de commitear.
+- Cada PR debe contener un solo cambio logico. No mezclar features, fixes, refactors, migraciones, upgrades de dependencias o cambios de documentacion no relacionados en el mismo PR.
+- No agregar "un cambio mas" a un PR existente si no pertenece al alcance original. Crear otra rama y otro PR.
+- Antes de crear o actualizar un PR, confirmar que la rama actual, el upstream y el titulo/alcance del PR describen el mismo cambio.
+- Los commits deben ser chicos, coherentes y con mensaje imperativo.
+- No reescribir historia compartida sin coordinacion.
+
 ## Documentacion y comentarios
 
 - Preferir codigo claro, nombres precisos y funciones pequenas antes que comentarios.
