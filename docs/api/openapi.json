@@ -314,6 +314,12 @@
               "writing",
               "paper",
               "cards",
+              "board",
+              "tiles",
+              "pieces",
+              "blocks",
+              "money",
+              "bags",
               "tokens",
               "dice",
               "timer",
@@ -471,6 +477,268 @@
         ],
         "type": "object"
       },
+      "GameCatalogItemDto": {
+        "properties": {
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/PublicCategoryDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "coverImage": {
+            "$ref": "#/components/schemas/PublicAssetDto"
+          },
+          "difficulty": {
+            "example": "medium",
+            "type": "string"
+          },
+          "durationMinutes": {
+            "example": 60,
+            "type": "number"
+          },
+          "materials": {
+            "items": {
+              "$ref": "#/components/schemas/PublicMaterialDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "maxPlayers": {
+            "example": 4,
+            "type": "number"
+          },
+          "minAge": {
+            "example": 10,
+            "type": "number"
+          },
+          "minPlayers": {
+            "example": 3,
+            "type": "number"
+          },
+          "ratingAverage": {
+            "example": 4.5,
+            "type": "number"
+          },
+          "ratingCount": {
+            "example": 20,
+            "type": "number"
+          },
+          "ratings": {
+            "items": {
+              "$ref": "#/components/schemas/PublicRatingDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "slug": {
+            "example": "catan",
+            "type": "string"
+          },
+          "summaryMd": {
+            "example": "Trade, build and race to ten victory points.",
+            "type": "string"
+          },
+          "title": {
+            "example": "The Settlers of Catan",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "summaryMd",
+          "ratingAverage",
+          "ratingCount",
+          "categories",
+          "materials",
+          "ratings",
+          "minPlayers",
+          "maxPlayers",
+          "minAge",
+          "difficulty",
+          "durationMinutes"
+        ],
+        "type": "object"
+      },
+      "GameDetailDto": {
+        "properties": {
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/PublicCategoryDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "coverImage": {
+            "$ref": "#/components/schemas/PublicAssetDto"
+          },
+          "difficulty": {
+            "example": "medium",
+            "type": "string"
+          },
+          "downloadableAssets": {
+            "items": {
+              "$ref": "#/components/schemas/PublicAssetDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "durationMinutes": {
+            "example": 60,
+            "type": "number"
+          },
+          "galleryImages": {
+            "items": {
+              "$ref": "#/components/schemas/PublicAssetDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "materials": {
+            "items": {
+              "$ref": "#/components/schemas/PublicMaterialDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "maxPlayers": {
+            "example": 4,
+            "type": "number"
+          },
+          "minAge": {
+            "example": 10,
+            "type": "number"
+          },
+          "minPlayers": {
+            "example": 3,
+            "type": "number"
+          },
+          "ratingAverage": {
+            "example": 4.5,
+            "type": "number"
+          },
+          "ratingCount": {
+            "example": 20,
+            "type": "number"
+          },
+          "ratings": {
+            "items": {
+              "$ref": "#/components/schemas/PublicRatingDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "referenceLinks": {
+            "items": {
+              "$ref": "#/components/schemas/PublicAssetDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "rulesMd": {
+            "example": "## Objective\nReach ten victory points.",
+            "type": "string"
+          },
+          "slug": {
+            "example": "catan",
+            "type": "string"
+          },
+          "summaryMd": {
+            "example": "Trade, build and race to ten victory points.",
+            "type": "string"
+          },
+          "title": {
+            "example": "The Settlers of Catan",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "summaryMd",
+          "ratingAverage",
+          "ratingCount",
+          "categories",
+          "materials",
+          "ratings",
+          "minPlayers",
+          "maxPlayers",
+          "minAge",
+          "difficulty",
+          "durationMinutes",
+          "rulesMd",
+          "galleryImages",
+          "downloadableAssets",
+          "referenceLinks"
+        ],
+        "type": "object"
+      },
+      "GameFiltersDto": {
+        "properties": {
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/PublicCategoryDto"
+            },
+            "maxItems": 2,
+            "type": "array"
+          },
+          "difficulties": {
+            "example": [
+              "easy",
+              "medium",
+              "hard"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 2,
+            "type": "array"
+          },
+          "materials": {
+            "items": {
+              "$ref": "#/components/schemas/PublicMaterialDto"
+            },
+            "maxItems": 2,
+            "type": "array"
+          },
+          "maxAge": {
+            "example": 18,
+            "type": "number"
+          },
+          "maxPlayers": {
+            "example": 12,
+            "type": "number"
+          },
+          "minAge": {
+            "example": 5,
+            "type": "number"
+          },
+          "minPlayers": {
+            "example": 1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "categories",
+          "materials",
+          "difficulties",
+          "minPlayers",
+          "maxPlayers",
+          "minAge",
+          "maxAge"
+        ],
+        "type": "object"
+      },
       "GameMaterialInputDto": {
         "properties": {
           "materialId": {
@@ -507,6 +775,169 @@
         "required": [
           "materialId",
           "requirementType"
+        ],
+        "type": "object"
+      },
+      "ModerateGameDto": {
+        "properties": {
+          "note": {
+            "default": "<string>",
+            "description": "Optional internal moderation note.",
+            "example": "Approved after checking materials and rules.",
+            "type": "string"
+          },
+          "status": {
+            "default": "<string>",
+            "description": "Moderator decision. Only approved or rejected are accepted.",
+            "enum": [
+              "approved",
+              "rejected"
+            ],
+            "example": "approved",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PaginatedGamesDto": {
+        "properties": {
+          "hasNextPage": {
+            "example": true,
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GameCatalogItemDto"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "limit": {
+            "example": 30,
+            "type": "number"
+          },
+          "page": {
+            "example": 1,
+            "type": "number"
+          },
+          "total": {
+            "example": 100,
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "hasNextPage"
+        ],
+        "type": "object"
+      },
+      "PublicAssetDto": {
+        "properties": {
+          "altText": {
+            "example": "Game table setup",
+            "type": "object"
+          },
+          "credit": {
+            "example": "Photo credit",
+            "type": "object"
+          },
+          "kind": {
+            "example": "cover",
+            "type": "string"
+          },
+          "licenseLabel": {
+            "example": "CC BY-SA 4.0",
+            "type": "object"
+          },
+          "sourceType": {
+            "example": "manual_url",
+            "type": "string"
+          },
+          "sourceUrl": {
+            "example": "https://example.com/source",
+            "type": "object"
+          },
+          "url": {
+            "example": "https://images.example/game.jpg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "sourceType",
+          "url"
+        ],
+        "type": "object"
+      },
+      "PublicCategoryDto": {
+        "properties": {
+          "name": {
+            "example": "Strategy",
+            "type": "string"
+          },
+          "slug": {
+            "example": "strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name"
+        ],
+        "type": "object"
+      },
+      "PublicMaterialDto": {
+        "properties": {
+          "kind": {
+            "example": "cards",
+            "type": "string"
+          },
+          "name": {
+            "example": "Cards",
+            "type": "string"
+          },
+          "notes": {
+            "example": "One standard deck.",
+            "type": "object"
+          },
+          "quantity": {
+            "example": 1,
+            "type": "object"
+          },
+          "requirementType": {
+            "example": "required",
+            "type": "string"
+          },
+          "slug": {
+            "example": "cards",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "kind",
+          "requirementType"
+        ],
+        "type": "object"
+      },
+      "PublicRatingDto": {
+        "properties": {
+          "comment": {
+            "example": "Great table presence.",
+            "type": "object"
+          },
+          "value": {
+            "example": 5,
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
         ],
         "type": "object"
       },
@@ -570,6 +1001,13 @@
             "description": "When true, only return games playable outdoors.",
             "example": false,
             "type": "boolean"
+          },
+          "page": {
+            "default": 1,
+            "description": "Page number for catalog pagination.",
+            "example": 1,
+            "minimum": 1,
+            "type": "number"
           },
           "players": {
             "default": "<number>",
@@ -821,7 +1259,7 @@
             "description": ""
           }
         },
-        "summary": "Complete Google OAuth2 login and return an API bearer token.",
+        "summary": "Complete Google OAuth2 login and redirect to the frontend auth callback.",
         "tags": [
           "auth"
         ]
@@ -1003,6 +1441,18 @@
             }
           },
           {
+            "description": "Page number for catalog pagination.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "example": 1,
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
             "description": "Maximum number of games to return.",
             "in": "query",
             "name": "limit",
@@ -1018,6 +1468,46 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hasNextPage": {
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "items": {
+                      "items": {
+                        "$ref": "#/components/schemas/GameCatalogItemDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "limit": {
+                      "example": 30,
+                      "type": "number"
+                    },
+                    "page": {
+                      "example": 1,
+                      "type": "number"
+                    },
+                    "total": {
+                      "example": 100,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "limit",
+                    "hasNextPage"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
             "description": ""
           }
         },
@@ -1215,6 +1705,265 @@
         ]
       }
     },
+    "/api/v1/games/filters": {
+      "get": {
+        "operationId": "GamesController_filters",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "categories": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicCategoryDto"
+                      },
+                      "maxItems": 2,
+                      "type": "array"
+                    },
+                    "difficulties": {
+                      "example": [
+                        "easy",
+                        "medium",
+                        "hard"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 2,
+                      "type": "array"
+                    },
+                    "materials": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicMaterialDto"
+                      },
+                      "maxItems": 2,
+                      "type": "array"
+                    },
+                    "maxAge": {
+                      "example": 18,
+                      "type": "number"
+                    },
+                    "maxPlayers": {
+                      "example": 12,
+                      "type": "number"
+                    },
+                    "minAge": {
+                      "example": 5,
+                      "type": "number"
+                    },
+                    "minPlayers": {
+                      "example": 1,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "categories",
+                    "materials",
+                    "difficulties",
+                    "minPlayers",
+                    "maxPlayers",
+                    "minAge",
+                    "maxAge"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "games"
+        ]
+      }
+    },
+    "/api/v1/games/moderation/pending": {
+      "get": {
+        "operationId": "GamesController_moderationQueue",
+        "parameters": [
+          {
+            "description": "Text search against title, summary and rules.",
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "default": "<string>",
+              "example": "cards",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Material UUIDs owned by the player.",
+            "in": "query",
+            "name": "materialIds",
+            "required": false,
+            "schema": {
+              "example": [
+                "11111111-1111-1111-1111-111111111111"
+              ],
+              "items": {
+                "default": "<string>",
+                "type": "string"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          {
+            "description": "Material slugs owned by the player.",
+            "in": "query",
+            "name": "materialSlugs",
+            "required": false,
+            "schema": {
+              "example": [
+                "cards",
+                "dice"
+              ],
+              "items": {
+                "default": "<string>",
+                "type": "string"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          {
+            "description": "Number of players available.",
+            "in": "query",
+            "name": "players",
+            "required": false,
+            "schema": {
+              "default": "<number>",
+              "example": 4,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Maximum allowed minimum age.",
+            "in": "query",
+            "name": "maxAge",
+            "required": false,
+            "schema": {
+              "default": "<number>",
+              "example": 8,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Game difficulty filter.",
+            "in": "query",
+            "name": "difficulty",
+            "required": false,
+            "schema": {
+              "default": "<string>",
+              "enum": [
+                "easy",
+                "medium",
+                "hard"
+              ],
+              "example": "medium",
+              "type": "string"
+            }
+          },
+          {
+            "description": "When true, only return games playable outdoors.",
+            "in": "query",
+            "name": "outdoorOnly",
+            "required": false,
+            "schema": {
+              "default": "<boolean>",
+              "example": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Page number for catalog pagination.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "example": 1,
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Maximum number of games to return.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "example": 10,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hasNextPage": {
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "items": {
+                      "items": {
+                        "$ref": "#/components/schemas/GameCatalogItemDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "limit": {
+                      "example": 30,
+                      "type": "number"
+                    },
+                    "page": {
+                      "example": 1,
+                      "type": "number"
+                    },
+                    "total": {
+                      "example": 100,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "limit",
+                    "hasNextPage"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "games"
+        ]
+      }
+    },
     "/api/v1/games/query": {
       "post": {
         "operationId": "GamesController_query",
@@ -1283,6 +2032,13 @@
                     "example": false,
                     "type": "boolean"
                   },
+                  "page": {
+                    "default": 1,
+                    "description": "Page number for catalog pagination.",
+                    "example": 1,
+                    "minimum": 1,
+                    "type": "number"
+                  },
                   "players": {
                     "default": "<number>",
                     "description": "Number of players available.",
@@ -1305,7 +2061,47 @@
           "required": true
         },
         "responses": {
-          "201": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hasNextPage": {
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "items": {
+                      "items": {
+                        "$ref": "#/components/schemas/GameCatalogItemDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "limit": {
+                      "example": 30,
+                      "type": "number"
+                    },
+                    "page": {
+                      "example": 1,
+                      "type": "number"
+                    },
+                    "total": {
+                      "example": 100,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "limit",
+                    "hasNextPage"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
             "description": ""
           }
         },
@@ -1330,6 +2126,129 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "categories": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicCategoryDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "coverImage": {
+                      "$ref": "#/components/schemas/PublicAssetDto"
+                    },
+                    "difficulty": {
+                      "example": "medium",
+                      "type": "string"
+                    },
+                    "downloadableAssets": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "durationMinutes": {
+                      "example": 60,
+                      "type": "number"
+                    },
+                    "galleryImages": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "materials": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicMaterialDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "maxPlayers": {
+                      "example": 4,
+                      "type": "number"
+                    },
+                    "minAge": {
+                      "example": 10,
+                      "type": "number"
+                    },
+                    "minPlayers": {
+                      "example": 3,
+                      "type": "number"
+                    },
+                    "ratingAverage": {
+                      "example": 4.5,
+                      "type": "number"
+                    },
+                    "ratingCount": {
+                      "example": 20,
+                      "type": "number"
+                    },
+                    "ratings": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicRatingDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "referenceLinks": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "rulesMd": {
+                      "example": "## Objective\nReach ten victory points.",
+                      "type": "string"
+                    },
+                    "slug": {
+                      "example": "catan",
+                      "type": "string"
+                    },
+                    "summaryMd": {
+                      "example": "Trade, build and race to ten victory points.",
+                      "type": "string"
+                    },
+                    "title": {
+                      "example": "The Settlers of Catan",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "title",
+                    "summaryMd",
+                    "ratingAverage",
+                    "ratingCount",
+                    "categories",
+                    "materials",
+                    "ratings",
+                    "minPlayers",
+                    "maxPlayers",
+                    "minAge",
+                    "difficulty",
+                    "durationMinutes",
+                    "rulesMd",
+                    "galleryImages",
+                    "downloadableAssets",
+                    "referenceLinks"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
             "description": ""
           }
         },
@@ -1606,6 +2525,186 @@
         ]
       }
     },
+    "/api/v1/games/{slug}/moderation": {
+      "patch": {
+        "operationId": "GamesController_moderate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "default": "<string>",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "note": {
+                    "default": "<string>",
+                    "description": "Optional internal moderation note.",
+                    "example": "Approved after checking materials and rules.",
+                    "type": "string"
+                  },
+                  "status": {
+                    "default": "<string>",
+                    "description": "Moderator decision. Only approved or rejected are accepted.",
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ],
+                    "example": "approved",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "categories": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicCategoryDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "coverImage": {
+                      "$ref": "#/components/schemas/PublicAssetDto"
+                    },
+                    "difficulty": {
+                      "example": "medium",
+                      "type": "string"
+                    },
+                    "downloadableAssets": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "durationMinutes": {
+                      "example": 60,
+                      "type": "number"
+                    },
+                    "galleryImages": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "materials": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicMaterialDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "maxPlayers": {
+                      "example": 4,
+                      "type": "number"
+                    },
+                    "minAge": {
+                      "example": 10,
+                      "type": "number"
+                    },
+                    "minPlayers": {
+                      "example": 3,
+                      "type": "number"
+                    },
+                    "ratingAverage": {
+                      "example": 4.5,
+                      "type": "number"
+                    },
+                    "ratingCount": {
+                      "example": 20,
+                      "type": "number"
+                    },
+                    "ratings": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicRatingDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "referenceLinks": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "rulesMd": {
+                      "example": "## Objective\nReach ten victory points.",
+                      "type": "string"
+                    },
+                    "slug": {
+                      "example": "catan",
+                      "type": "string"
+                    },
+                    "summaryMd": {
+                      "example": "Trade, build and race to ten victory points.",
+                      "type": "string"
+                    },
+                    "title": {
+                      "example": "The Settlers of Catan",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "title",
+                    "summaryMd",
+                    "ratingAverage",
+                    "ratingCount",
+                    "categories",
+                    "materials",
+                    "ratings",
+                    "minPlayers",
+                    "maxPlayers",
+                    "minAge",
+                    "difficulty",
+                    "durationMinutes",
+                    "rulesMd",
+                    "galleryImages",
+                    "downloadableAssets",
+                    "referenceLinks"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "games"
+        ]
+      }
+    },
     "/api/v1/games/{slug}/ratings": {
       "post": {
         "operationId": "RatingsController_rate",
@@ -1721,6 +2820,12 @@
                       "writing",
                       "paper",
                       "cards",
+                      "board",
+                      "tiles",
+                      "pieces",
+                      "blocks",
+                      "money",
+                      "bags",
                       "tokens",
                       "dice",
                       "timer",

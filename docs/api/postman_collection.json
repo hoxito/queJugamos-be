@@ -76,7 +76,7 @@
         },
         {
           "event": [],
-          "name": "Complete Google OAuth2 login and return an API bearer token.",
+          "name": "Complete Google OAuth2 login and redirect to the frontend auth callback.",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -84,7 +84,7 @@
             "auth": null,
             "description": {},
             "method": "GET",
-            "name": "Complete Google OAuth2 login and return an API bearer token.",
+            "name": "Complete Google OAuth2 login and redirect to the frontend auth callback.",
             "url": {
               "host": [
                 "{{baseUrl}}"
@@ -851,6 +851,12 @@
           "request": {
             "auth": null,
             "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "method": "GET",
             "name": "Games Controller list",
             "url": {
@@ -918,6 +924,12 @@
                   "value": "<boolean>"
                 },
                 {
+                  "description": "Page number for catalog pagination.",
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
                   "description": "Maximum number of games to return.",
                   "disabled": false,
                   "key": "limit",
@@ -929,18 +941,24 @@
           },
           "response": [
             {
-              "_postman_previewlanguage": "text",
-              "body": "",
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"items\": [\n    {\n      \"slug\": \"catan\",\n      \"title\": \"The Settlers of Catan\",\n      \"summaryMd\": \"Trade, build and race to ten victory points.\",\n      \"ratingAverage\": 4.5,\n      \"ratingCount\": 20,\n      \"categories\": [\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        },\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        }\n      ],\n      \"materials\": [\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        },\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        }\n      ],\n      \"ratings\": [\n        {\n          \"value\": 5,\n          \"comment\": {}\n        },\n        {\n          \"value\": 5,\n          \"comment\": {}\n        }\n      ],\n      \"minPlayers\": 3,\n      \"maxPlayers\": 4,\n      \"minAge\": 10,\n      \"difficulty\": \"medium\",\n      \"durationMinutes\": 60,\n      \"coverImage\": {\n        \"kind\": \"cover\",\n        \"sourceType\": \"manual_url\",\n        \"url\": \"https://images.example/game.jpg\",\n        \"sourceUrl\": {},\n        \"credit\": {},\n        \"licenseLabel\": {},\n        \"altText\": {}\n      }\n    },\n    {\n      \"slug\": \"catan\",\n      \"title\": \"The Settlers of Catan\",\n      \"summaryMd\": \"Trade, build and race to ten victory points.\",\n      \"ratingAverage\": 4.5,\n      \"ratingCount\": 20,\n      \"categories\": [\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        },\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        }\n      ],\n      \"materials\": [\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        },\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        }\n      ],\n      \"ratings\": [\n        {\n          \"value\": 5,\n          \"comment\": {}\n        },\n        {\n          \"value\": 5,\n          \"comment\": {}\n        }\n      ],\n      \"minPlayers\": 3,\n      \"maxPlayers\": 4,\n      \"minAge\": 10,\n      \"difficulty\": \"medium\",\n      \"durationMinutes\": 60,\n      \"coverImage\": {\n        \"kind\": \"cover\",\n        \"sourceType\": \"manual_url\",\n        \"url\": \"https://images.example/game.jpg\",\n        \"sourceUrl\": {},\n        \"credit\": {},\n        \"licenseLabel\": {},\n        \"altText\": {}\n      }\n    }\n  ],\n  \"total\": 100,\n  \"page\": 1,\n  \"limit\": 30,\n  \"hasNextPage\": true\n}",
               "code": 200,
               "cookie": [],
               "header": [
                 {
                   "key": "Content-Type",
-                  "value": "text/plain"
+                  "value": "application/json"
                 }
               ],
               "originalRequest": {
                 "body": {},
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
                 "method": "GET",
                 "url": {
                   "host": [
@@ -983,6 +1001,10 @@
                     {
                       "key": "outdoorOnly",
                       "value": "false"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
                     },
                     {
                       "key": "limit",
@@ -1108,12 +1130,16 @@
                   "language": "json"
                 }
               },
-              "raw": "{\n  \"query\": \"<string>\",\n  \"materialIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"materialSlugs\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"players\": \"<number>\",\n  \"maxAge\": \"<number>\",\n  \"difficulty\": \"<string>\",\n  \"outdoorOnly\": \"<boolean>\",\n  \"limit\": 30\n}"
+              "raw": "{\n  \"query\": \"<string>\",\n  \"materialIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"materialSlugs\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"players\": \"<number>\",\n  \"maxAge\": \"<number>\",\n  \"difficulty\": \"<string>\",\n  \"outdoorOnly\": \"<boolean>\",\n  \"page\": 1,\n  \"limit\": 30\n}"
             },
             "description": {},
             "header": [
               {
                 "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
                 "value": "application/json"
               }
             ],
@@ -1135,14 +1161,14 @@
           },
           "response": [
             {
-              "_postman_previewlanguage": "text",
-              "body": "",
-              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"items\": [\n    {\n      \"slug\": \"catan\",\n      \"title\": \"The Settlers of Catan\",\n      \"summaryMd\": \"Trade, build and race to ten victory points.\",\n      \"ratingAverage\": 4.5,\n      \"ratingCount\": 20,\n      \"categories\": [\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        },\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        }\n      ],\n      \"materials\": [\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        },\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        }\n      ],\n      \"ratings\": [\n        {\n          \"value\": 5,\n          \"comment\": {}\n        },\n        {\n          \"value\": 5,\n          \"comment\": {}\n        }\n      ],\n      \"minPlayers\": 3,\n      \"maxPlayers\": 4,\n      \"minAge\": 10,\n      \"difficulty\": \"medium\",\n      \"durationMinutes\": 60,\n      \"coverImage\": {\n        \"kind\": \"cover\",\n        \"sourceType\": \"manual_url\",\n        \"url\": \"https://images.example/game.jpg\",\n        \"sourceUrl\": {},\n        \"credit\": {},\n        \"licenseLabel\": {},\n        \"altText\": {}\n      }\n    },\n    {\n      \"slug\": \"catan\",\n      \"title\": \"The Settlers of Catan\",\n      \"summaryMd\": \"Trade, build and race to ten victory points.\",\n      \"ratingAverage\": 4.5,\n      \"ratingCount\": 20,\n      \"categories\": [\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        },\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        }\n      ],\n      \"materials\": [\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        },\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        }\n      ],\n      \"ratings\": [\n        {\n          \"value\": 5,\n          \"comment\": {}\n        },\n        {\n          \"value\": 5,\n          \"comment\": {}\n        }\n      ],\n      \"minPlayers\": 3,\n      \"maxPlayers\": 4,\n      \"minAge\": 10,\n      \"difficulty\": \"medium\",\n      \"durationMinutes\": 60,\n      \"coverImage\": {\n        \"kind\": \"cover\",\n        \"sourceType\": \"manual_url\",\n        \"url\": \"https://images.example/game.jpg\",\n        \"sourceUrl\": {},\n        \"credit\": {},\n        \"licenseLabel\": {},\n        \"altText\": {}\n      }\n    }\n  ],\n  \"total\": 100,\n  \"page\": 1,\n  \"limit\": 30,\n  \"hasNextPage\": true\n}",
+              "code": 200,
               "cookie": [],
               "header": [
                 {
                   "key": "Content-Type",
-                  "value": "text/plain"
+                  "value": "application/json"
                 }
               ],
               "originalRequest": {
@@ -1153,8 +1179,14 @@
                       "language": "json"
                     }
                   },
-                  "raw": "{\n  \"query\": \"cards\",\n  \"materialIds\": [\n    \"11111111-1111-1111-1111-111111111111\"\n  ],\n  \"materialSlugs\": [\n    \"cards\",\n    \"dice\"\n  ],\n  \"players\": 4,\n  \"maxAge\": 8,\n  \"difficulty\": \"medium\",\n  \"outdoorOnly\": false,\n  \"limit\": 10\n}"
+                  "raw": "{\n  \"query\": \"cards\",\n  \"materialIds\": [\n    \"11111111-1111-1111-1111-111111111111\"\n  ],\n  \"materialSlugs\": [\n    \"cards\",\n    \"dice\"\n  ],\n  \"players\": 4,\n  \"maxAge\": 8,\n  \"difficulty\": \"medium\",\n  \"outdoorOnly\": false,\n  \"page\": 1,\n  \"limit\": 10\n}"
                 },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
                 "method": "POST",
                 "url": {
                   "host": [
@@ -1170,7 +1202,273 @@
                   "variable": []
                 }
               },
-              "status": "Created"
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller filters",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "name": "Games Controller filters",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                "filters"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"categories\": [\n    {\n      \"slug\": \"strategy\",\n      \"name\": \"Strategy\"\n    },\n    {\n      \"slug\": \"strategy\",\n      \"name\": \"Strategy\"\n    }\n  ],\n  \"materials\": [\n    {\n      \"slug\": \"cards\",\n      \"name\": \"Cards\",\n      \"kind\": \"cards\",\n      \"requirementType\": \"required\",\n      \"quantity\": {},\n      \"notes\": {}\n    },\n    {\n      \"slug\": \"cards\",\n      \"name\": \"Cards\",\n      \"kind\": \"cards\",\n      \"requirementType\": \"required\",\n      \"quantity\": {},\n      \"notes\": {}\n    }\n  ],\n  \"difficulties\": [\n    \"easy\",\n    \"medium\",\n    \"hard\"\n  ],\n  \"minPlayers\": 1,\n  \"maxPlayers\": 12,\n  \"minAge\": 5,\n  \"maxAge\": 18\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    "filters"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller moderation Queue",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "name": "Games Controller moderation Queue",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                "moderation",
+                "pending"
+              ],
+              "query": [
+                {
+                  "description": "Text search against title, summary and rules.",
+                  "disabled": false,
+                  "key": "query",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material UUIDs owned by the player.",
+                  "disabled": false,
+                  "key": "materialIds",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material UUIDs owned by the player.",
+                  "disabled": false,
+                  "key": "materialIds",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material slugs owned by the player.",
+                  "disabled": false,
+                  "key": "materialSlugs",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Material slugs owned by the player.",
+                  "disabled": false,
+                  "key": "materialSlugs",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Number of players available.",
+                  "disabled": false,
+                  "key": "players",
+                  "value": "<number>"
+                },
+                {
+                  "description": "Maximum allowed minimum age.",
+                  "disabled": false,
+                  "key": "maxAge",
+                  "value": "<number>"
+                },
+                {
+                  "description": "Game difficulty filter.",
+                  "disabled": false,
+                  "key": "difficulty",
+                  "value": "<string>"
+                },
+                {
+                  "description": "When true, only return games playable outdoors.",
+                  "disabled": false,
+                  "key": "outdoorOnly",
+                  "value": "<boolean>"
+                },
+                {
+                  "description": "Page number for catalog pagination.",
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "description": "Maximum number of games to return.",
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "30"
+                }
+              ],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"items\": [\n    {\n      \"slug\": \"catan\",\n      \"title\": \"The Settlers of Catan\",\n      \"summaryMd\": \"Trade, build and race to ten victory points.\",\n      \"ratingAverage\": 4.5,\n      \"ratingCount\": 20,\n      \"categories\": [\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        },\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        }\n      ],\n      \"materials\": [\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        },\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        }\n      ],\n      \"ratings\": [\n        {\n          \"value\": 5,\n          \"comment\": {}\n        },\n        {\n          \"value\": 5,\n          \"comment\": {}\n        }\n      ],\n      \"minPlayers\": 3,\n      \"maxPlayers\": 4,\n      \"minAge\": 10,\n      \"difficulty\": \"medium\",\n      \"durationMinutes\": 60,\n      \"coverImage\": {\n        \"kind\": \"cover\",\n        \"sourceType\": \"manual_url\",\n        \"url\": \"https://images.example/game.jpg\",\n        \"sourceUrl\": {},\n        \"credit\": {},\n        \"licenseLabel\": {},\n        \"altText\": {}\n      }\n    },\n    {\n      \"slug\": \"catan\",\n      \"title\": \"The Settlers of Catan\",\n      \"summaryMd\": \"Trade, build and race to ten victory points.\",\n      \"ratingAverage\": 4.5,\n      \"ratingCount\": 20,\n      \"categories\": [\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        },\n        {\n          \"slug\": \"strategy\",\n          \"name\": \"Strategy\"\n        }\n      ],\n      \"materials\": [\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        },\n        {\n          \"slug\": \"cards\",\n          \"name\": \"Cards\",\n          \"kind\": \"cards\",\n          \"requirementType\": \"required\",\n          \"quantity\": {},\n          \"notes\": {}\n        }\n      ],\n      \"ratings\": [\n        {\n          \"value\": 5,\n          \"comment\": {}\n        },\n        {\n          \"value\": 5,\n          \"comment\": {}\n        }\n      ],\n      \"minPlayers\": 3,\n      \"maxPlayers\": 4,\n      \"minAge\": 10,\n      \"difficulty\": \"medium\",\n      \"durationMinutes\": 60,\n      \"coverImage\": {\n        \"kind\": \"cover\",\n        \"sourceType\": \"manual_url\",\n        \"url\": \"https://images.example/game.jpg\",\n        \"sourceUrl\": {},\n        \"credit\": {},\n        \"licenseLabel\": {},\n        \"altText\": {}\n      }\n    }\n  ],\n  \"total\": 100,\n  \"page\": 1,\n  \"limit\": 30,\n  \"hasNextPage\": true\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "originalRequest": {
+                "body": {},
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    "moderation",
+                    "pending"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "cards"
+                    },
+                    {
+                      "key": "materialIds",
+                      "value": "11111111-1111-1111-1111-111111111111"
+                    },
+                    {
+                      "key": "materialSlugs",
+                      "value": "cards"
+                    },
+                    {
+                      "key": "materialSlugs",
+                      "value": "dice"
+                    },
+                    {
+                      "key": "players",
+                      "value": "4"
+                    },
+                    {
+                      "key": "maxAge",
+                      "value": "8"
+                    },
+                    {
+                      "key": "difficulty",
+                      "value": "medium"
+                    },
+                    {
+                      "key": "outdoorOnly",
+                      "value": "false"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                }
+              },
+              "status": "OK"
             }
           ]
         },
@@ -1298,6 +1596,12 @@
           "request": {
             "auth": null,
             "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "method": "GET",
             "name": "Games Controller find By Slug",
             "url": {
@@ -1324,18 +1628,24 @@
           },
           "response": [
             {
-              "_postman_previewlanguage": "text",
-              "body": "",
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"slug\": \"catan\",\n  \"title\": \"The Settlers of Catan\",\n  \"summaryMd\": \"Trade, build and race to ten victory points.\",\n  \"ratingAverage\": 4.5,\n  \"ratingCount\": 20,\n  \"categories\": [\n    {\n      \"slug\": \"strategy\",\n      \"name\": \"Strategy\"\n    },\n    {\n      \"slug\": \"strategy\",\n      \"name\": \"Strategy\"\n    }\n  ],\n  \"materials\": [\n    {\n      \"slug\": \"cards\",\n      \"name\": \"Cards\",\n      \"kind\": \"cards\",\n      \"requirementType\": \"required\",\n      \"quantity\": {},\n      \"notes\": {}\n    },\n    {\n      \"slug\": \"cards\",\n      \"name\": \"Cards\",\n      \"kind\": \"cards\",\n      \"requirementType\": \"required\",\n      \"quantity\": {},\n      \"notes\": {}\n    }\n  ],\n  \"ratings\": [\n    {\n      \"value\": 5,\n      \"comment\": {}\n    },\n    {\n      \"value\": 5,\n      \"comment\": {}\n    }\n  ],\n  \"minPlayers\": 3,\n  \"maxPlayers\": 4,\n  \"minAge\": 10,\n  \"difficulty\": \"medium\",\n  \"durationMinutes\": 60,\n  \"rulesMd\": \"## Objective\\nReach ten victory points.\",\n  \"galleryImages\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    }\n  ],\n  \"downloadableAssets\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    }\n  ],\n  \"referenceLinks\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    }\n  ],\n  \"coverImage\": {\n    \"kind\": \"cover\",\n    \"sourceType\": \"manual_url\",\n    \"url\": \"https://images.example/game.jpg\",\n    \"sourceUrl\": {},\n    \"credit\": {},\n    \"licenseLabel\": {},\n    \"altText\": {}\n  }\n}",
               "code": 200,
               "cookie": [],
               "header": [
                 {
                   "key": "Content-Type",
-                  "value": "text/plain"
+                  "value": "application/json"
                 }
               ],
               "originalRequest": {
                 "body": {},
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
                 "method": "GET",
                 "url": {
                   "host": [
@@ -1346,6 +1656,131 @@
                     "v1",
                     "games",
                     ":slug"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "(Required) ",
+                      "disabled": false,
+                      "key": "slug",
+                      "type": "any",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "name": "Games Controller moderate",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ],
+              "type": "bearer"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"status\": \"<string>\",\n  \"note\": \"<string>\"\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "name": "Games Controller moderate",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "games",
+                ":slug",
+                "moderation"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "(Required) ",
+                  "disabled": false,
+                  "key": "slug",
+                  "type": "any",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"slug\": \"catan\",\n  \"title\": \"The Settlers of Catan\",\n  \"summaryMd\": \"Trade, build and race to ten victory points.\",\n  \"ratingAverage\": 4.5,\n  \"ratingCount\": 20,\n  \"categories\": [\n    {\n      \"slug\": \"strategy\",\n      \"name\": \"Strategy\"\n    },\n    {\n      \"slug\": \"strategy\",\n      \"name\": \"Strategy\"\n    }\n  ],\n  \"materials\": [\n    {\n      \"slug\": \"cards\",\n      \"name\": \"Cards\",\n      \"kind\": \"cards\",\n      \"requirementType\": \"required\",\n      \"quantity\": {},\n      \"notes\": {}\n    },\n    {\n      \"slug\": \"cards\",\n      \"name\": \"Cards\",\n      \"kind\": \"cards\",\n      \"requirementType\": \"required\",\n      \"quantity\": {},\n      \"notes\": {}\n    }\n  ],\n  \"ratings\": [\n    {\n      \"value\": 5,\n      \"comment\": {}\n    },\n    {\n      \"value\": 5,\n      \"comment\": {}\n    }\n  ],\n  \"minPlayers\": 3,\n  \"maxPlayers\": 4,\n  \"minAge\": 10,\n  \"difficulty\": \"medium\",\n  \"durationMinutes\": 60,\n  \"rulesMd\": \"## Objective\\nReach ten victory points.\",\n  \"galleryImages\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    }\n  ],\n  \"downloadableAssets\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    }\n  ],\n  \"referenceLinks\": [\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    },\n    {\n      \"kind\": \"cover\",\n      \"sourceType\": \"manual_url\",\n      \"url\": \"https://images.example/game.jpg\",\n      \"sourceUrl\": {},\n      \"credit\": {},\n      \"licenseLabel\": {},\n      \"altText\": {}\n    }\n  ],\n  \"coverImage\": {\n    \"kind\": \"cover\",\n    \"sourceType\": \"manual_url\",\n    \"url\": \"https://images.example/game.jpg\",\n    \"sourceUrl\": {},\n    \"credit\": {},\n    \"licenseLabel\": {},\n    \"altText\": {}\n  }\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"status\": \"approved\",\n  \"note\": \"Approved after checking materials and rules.\"\n}"
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "games",
+                    ":slug",
+                    "moderation"
                   ],
                   "query": [],
                   "variable": [

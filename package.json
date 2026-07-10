@@ -2,6 +2,7 @@
   "name": "@quejugamos/api",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",

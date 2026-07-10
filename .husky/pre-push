@@ -1,1 +1,11 @@
-pnpm api:docs:check
+#!/usr/bin/env sh
+set -e
+
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm api:docs:check
+elif command -v corepack >/dev/null 2>&1; then
+  corepack pnpm api:docs:check
+else
+  echo "pnpm is required to run pre-push checks."
+  exit 127
+fi
