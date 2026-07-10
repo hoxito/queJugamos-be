@@ -1,22 +1,22 @@
-# Manual de migraciones Prisma
+# Prisma Migration Guide
 
-Este backend usa Prisma como fuente de verdad del modelo de datos. Las tablas, relaciones e indices viven en `prisma/schema.prisma` y las migraciones versionadas en `prisma/migrations`.
+This backend uses Prisma as the source of truth for the data model. Tables, relations, and indexes live in `prisma/schema.prisma`; versioned migrations live in `prisma/migrations`.
 
-## Desarrollo local
+## Local Development
 
-1. Levantar Postgres y Redis:
+1. Start Postgres and Redis:
 
 ```bash
 docker compose up postgres redis
 ```
 
-2. Crear una migracion cuando cambie el modelo:
+2. Create a migration after changing the model:
 
 ```bash
-pnpm prisma:migrate --name nombre_del_cambio
+pnpm prisma:migrate --name change_name
 ```
 
-3. Regenerar el cliente y validar:
+3. Regenerate the client and validate:
 
 ```bash
 pnpm prisma:generate
@@ -24,17 +24,17 @@ pnpm typecheck
 pnpm test
 ```
 
-4. Poblar datos base idempotentes:
+4. Seed idempotent base data:
 
 ```bash
 pnpm prisma:seed
 ```
 
-El seed se puede ejecutar mas de una vez. Usa `upsert`, por lo que no duplica materiales, usuario admin ni juegos base.
+The seed can run more than once. It uses `upsert`, so it does not duplicate materials, the admin user, or base games.
 
-## Ambientes compartidos
+## Shared Environments
 
-En staging/produccion no se usa `migrate dev`. El despliegue debe ejecutar:
+Staging and production must not use `migrate dev`. Deployment should run:
 
 ```bash
 pnpm prisma:deploy
@@ -42,34 +42,34 @@ pnpm prisma:seed
 pnpm start:prod
 ```
 
-El contenedor Docker ya ejecuta esos pasos antes de iniciar NestJS. Prisma aplica solo migraciones pendientes y registra el estado en `_prisma_migrations`.
+The Docker container already runs these steps before starting NestJS. Prisma applies only pending migrations and records state in `_prisma_migrations`.
 
-## Datos persistentes en Docker
+## Persistent Docker Data
 
-`docker-compose.yml` define el volumen `postgres_data` montado en `/var/lib/postgresql/data`. Mientras ese volumen exista, la data queda persistida y no hace falta recrearla con cada arranque.
+`docker-compose.yml` defines the `postgres_data` volume mounted at `/var/lib/postgresql/data`. As long as this volume exists, data remains persistent and does not need to be recreated on every startup.
 
-Para reiniciar contenedores sin borrar datos:
+Restart containers without deleting data:
 
 ```bash
 docker compose down
 docker compose up --build
 ```
 
-Para borrar toda la base local de forma intencional:
+Intentionally delete the whole local database:
 
 ```bash
 docker compose down -v
 ```
 
-## Reparacion de bases locales TypeORM
+## Repairing Local TypeORM Databases
 
-Si una base local fue creada con TypeORM antes de migrar a Prisma, puede tener tablas correctas pero enums con nombres TypeORM como `games_status_enum`. Prisma espera enums como `"GameStatus"` y puede fallar con:
+If a local database was created with TypeORM before the Prisma migration, it may have correct tables but TypeORM-style enum names such as `games_status_enum`. Prisma expects enum names such as `"GameStatus"` and may fail with:
 
 ```text
 type "public.GameStatus" does not exist
 ```
 
-Para reparar esa base local sin borrar datos, ejecutar `database/repair-typeorm-prisma-enums.sql` y luego marcar la migracion inicial como aplicada:
+To repair that local database without deleting data, run `database/repair-typeorm-prisma-enums.sql` and then mark the initial migration as applied:
 
 ```bash
 docker cp database/repair-typeorm-prisma-enums.sql quejugamos-postgres:/tmp/repair-typeorm-prisma-enums.sql
@@ -77,11 +77,11 @@ docker compose exec postgres psql -v ON_ERROR_STOP=1 -U quejugamos -d quejugamos
 DATABASE_URL=postgresql://quejugamos:quejugamos@localhost:5432/quejugamos pnpm prisma migrate resolve --applied 20260708000000_init
 ```
 
-## Reglas para cambios de schema
+## Schema Change Rules
 
-- Todo cambio de tablas, columnas, enums, indices o relaciones debe pasar por `prisma/schema.prisma`.
-- Toda migracion debe quedar versionada en `prisma/migrations`.
-- Si el cambio requiere datos iniciales o backfill reproducible, actualizar `prisma/seed.cjs` o agregar SQL explicito en la migracion.
-- No editar migraciones ya aplicadas en ambientes compartidos; crear una migracion nueva.
-- Revisar manualmente las migraciones que cambien datos, borren columnas o alteren enums.
-- Mantener `.env.example`, README y Swagger alineados cuando cambien contratos o variables.
+- Every table, column, enum, index, or relation change must go through `prisma/schema.prisma`.
+- Every migration must be versioned in `prisma/migrations`.
+- If a change needs initial data or reproducible backfill, update `prisma/seed.cjs` or add explicit SQL in the migration.
+- Do not edit migrations that have already been applied in shared environments; create a new migration instead.
+- Manually review migrations that change data, drop columns, or alter enums.
+- Keep `.env.example`, README, and Swagger aligned when contracts or environment variables change.

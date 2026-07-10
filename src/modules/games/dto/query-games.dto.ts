@@ -28,8 +28,7 @@ export class QueryGamesDto {
   @ApiPropertyOptional({
     description:
       "Material UUIDs selected by the user. The backend filters the full catalog by required material matches before ordering and paginating.",
-    type: String,
-    isArray: true,
+    type: [String],
     example: ["11111111-1111-1111-1111-111111111111"]
   })
   @IsOptional()
@@ -41,8 +40,7 @@ export class QueryGamesDto {
   @ApiPropertyOptional({
     description:
       "Material slugs selected by the user. Fully playable games are ranked before games requiring extra materials.",
-    type: String,
-    isArray: true,
+    type: [String],
     example: ["paper", "pen"]
   })
   @IsOptional()

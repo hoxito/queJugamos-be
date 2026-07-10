@@ -1,161 +1,162 @@
 # AGENTS.md
 
-Guia obligatoria para cualquier agente o desarrollador que trabaje en este repositorio.
+Mandatory guide for any agent or developer working in this repository.
 
-## Objetivo del repositorio
+## Repository Goal
 
-Este backend debe mantenerse como una API NestJS simple, modular, testeable y facil de evolucionar. Cada cambio debe favorecer bajo acoplamiento, contratos explicitos, documentacion util y compatibilidad con la documentacion oficial de NestJS.
+This backend must stay a simple, modular, testable NestJS API that is easy to evolve. Every change should favor low coupling, explicit contracts, useful documentation, and compatibility with the official NestJS documentation.
 
-Referencias base:
+Base references:
 
 - NestJS documentation: https://docs.nestjs.com/
 - NestJS OpenAPI/Swagger: https://docs.nestjs.com/openapi/introduction
 - NestJS testing: https://docs.nestjs.com/fundamentals/testing
 - NestJS Prisma recipe: https://docs.nestjs.com/recipes/prisma
 
-## Principios de arquitectura
+## Architecture Principles
 
-- Seguir los patrones oficiales de NestJS: `module`, `controller`, `service`, providers inyectables, pipes, guards, interceptors y filters cuando apliquen.
-- Organizar por dominio/modulo, no por tipo tecnico global. Ejemplo: `src/modules/games` contiene controller, service, DTOs, modelos/entidades y tests del dominio games.
-- Cada dominio con contrato HTTP propio debe tener su modulo dedicado. Ejemplos actuales: `games`, `materials`, `categories`, `users`, `ratings`, `comments`, `auth`, `prisma`, `redis`.
-- Un modulo debe contener sus controllers, services, DTOs, tipos de dominio, mappers/presenters y tests relacionados. No colocar logica de un dominio dentro de otro modulo solo por conveniencia.
-- Los modulos se comunican mediante providers exportados por el modulo propietario. Si `ratings` necesita resolver juegos, importa `GamesModule` y consume `GamesService`; no accede a detalles internos ni a archivos privados del modulo.
-- Solo mover codigo a `src/common` cuando sea transversal y reutilizable por varios dominios, por ejemplo paginacion, cache decorators/interceptors, filtros HTTP o utilidades puras.
-- Preferir DTOs publicos por caso de uso: un listado puede devolver `GameCatalogItemDto` y un detalle `GameDetailDto`. No exponer directamente modelos Prisma cuando el contrato publico requiere ocultar ids internos, timestamps o relaciones pesadas.
-- La paginacion debe implementarse con helpers comunes de `src/common/pagination` para mantener `page`, `limit`, `total` y `hasNextPage` consistentes en todos los modulos.
-- La cache de respuestas completas debe declararse en controllers con decoradores/interceptors comunes, no duplicarse manualmente en cada service. Los services pueden invalidar namespaces cuando mutan datos.
-- Mantener controladores delgados. Un controller solo debe manejar HTTP, validacion de entrada declarativa, parametros, codigos de respuesta y delegacion al service.
-- Mantener services como capa de aplicacion. Un service orquesta reglas de negocio, transacciones y llamadas a persistencia, pero no debe mezclar detalles HTTP.
-- Evitar dependencias cruzadas entre modulos. Si un modulo necesita capacidades de otro, consumirlas mediante providers exportados por el modulo propietario.
-- No introducir singletons manuales, estado global mutable ni imports directos que salteen la inyeccion de dependencias de NestJS.
-- Separar reglas puras en funciones o clases testeables cuando la logica crece. Mantener esas piezas sin dependencias de NestJS si no las necesitan.
-- Preferir composicion sobre herencia. Usar clases base solo cuando exista una abstraccion estable y repetida.
+- Follow official NestJS patterns: `module`, `controller`, `service`, injectable providers, pipes, guards, interceptors, and filters when appropriate.
+- Organize by domain/module, not by global technical type. For example, `src/modules/games` owns the games controller, service, DTOs, domain models, and tests.
+- Every domain with its own HTTP contract should have a dedicated module. Current examples include `games`, `materials`, `categories`, `users`, `ratings`, `comments`, `auth`, `prisma`, and `redis`.
+- A module should contain its controllers, services, DTOs, domain types, mappers/presenters, and related tests. Do not place one domain's logic inside another module for convenience.
+- Modules communicate through providers exported by the owning module. If `ratings` needs games behavior, it imports `GamesModule` and consumes `GamesService`; it must not reach into private files.
+- Move code to `src/common` only when it is cross-cutting and reusable across multiple domains, such as pagination, cache decorators/interceptors, HTTP filters, or pure utilities.
+- Prefer public DTOs by use case: a list can return `GameCatalogItemDto` and a detail page can return `GameDetailDto`. Do not expose Prisma models directly when the public contract should hide internal ids, timestamps, or heavy relations.
+- Pagination must use helpers from `src/common/pagination` so `page`, `limit`, `total`, and `hasNextPage` stay consistent.
+- Full-response caching should be declared in controllers with common decorators/interceptors. Services may invalidate namespaces when they mutate data.
+- Keep controllers thin. A controller handles HTTP, declarative validation, params, response codes, and service delegation.
+- Keep services as the application layer. A service orchestrates business rules, transactions, and persistence calls, but should not mix HTTP details into business logic.
+- Avoid cross-module dependency cycles. If a module needs another module's capability, consume an exported provider from the owner.
+- Do not introduce manual singletons, mutable global state, or direct imports that bypass NestJS dependency injection.
+- Extract pure rules into testable functions/classes when logic grows. Keep those pieces free of NestJS dependencies when they do not need them.
+- Prefer composition over inheritance. Use base classes only when a stable repeated abstraction already exists.
 
-## Acoplamiento y dependencias
+## Coupling And Dependencies
 
-- Cada provider debe depender de interfaces, tokens o servicios de dominio cuando eso reduzca acoplamiento real. No crear abstracciones vacias "por si acaso".
-- No acceder a la base de datos desde controllers.
-- No importar detalles internos de otro modulo. Importar desde el modulo publico o mover la logica compartida a `src/common` si realmente es transversal.
-- Evitar ciclos de dependencias. Si aparece `forwardRef`, tratarlo como deuda tecnica y documentar por que no hay una alternativa simple.
-- Toda integracion externa debe estar encapsulada en un provider dedicado, con configuracion via `ConfigService` y tests con mocks/fakes.
+- Providers should depend on interfaces, tokens, or domain services when that meaningfully reduces coupling. Do not create empty abstractions "just in case".
+- Controllers must not access the database directly.
+- Do not import internal details from another module. Import from the public module boundary, or move truly shared logic to `src/common`.
+- Avoid dependency cycles. Treat `forwardRef` as technical debt and document why there is no simple alternative.
+- Every external integration must be encapsulated in a dedicated provider, configured through `ConfigService`, and tested with mocks/fakes.
 
-## Patrones de diseno permitidos
+## Allowed Design Patterns
 
-- Dependency Injection mediante providers de NestJS.
-- Repository/Data Mapper a traves de Prisma Client y servicios de dominio, no consultas crudas dispersas.
-- DTO + validation pipe para contratos de entrada.
-- Mapper/Presenter cuando la respuesta publica no debe exponer directamente el modelo de persistencia.
-- Factory solo cuando la construccion tenga reglas o variantes reales.
-- Strategy cuando existan comportamientos intercambiables por configuracion o tipo de dominio.
-- CQRS solo si el caso de uso justifica separar comandos/consultas; no introducirlo para CRUD simple.
+- Dependency Injection through NestJS providers.
+- Repository/Data Mapper through Prisma Client and domain services, not scattered raw queries.
+- DTO + validation pipe for input contracts.
+- Mapper/Presenter when the public response must not expose the persistence model directly.
+- Factory only when construction has real rules or variants.
+- Strategy when behavior is interchangeable by configuration or domain type.
+- CQRS only when the use case justifies separating commands and queries; do not introduce it for simple CRUD.
 
-## Persistencia y Prisma
+## Persistence And Prisma
 
-- Prisma es el estandar objetivo para acceso a base de datos.
-- Todo modelo nuevo de persistencia debe definirse en el schema de Prisma y accederse mediante un provider `PrismaService` o repositorio de modulo que lo envuelva.
-- No agregar nuevas entidades TypeORM. El codigo TypeORM existente debe tratarse como legado hasta su migracion planificada a Prisma.
-- Las migraciones de schema deben versionarse y ejecutarse de forma reproducible.
-- No usar `synchronize: true` en entornos compartidos, staging o produccion.
-- Las consultas raw solo se permiten cuando Prisma no pueda expresar la consulta con claridad. Deben usar parametros, tener tests y documentar brevemente el motivo fuera del codigo si es una decision relevante.
+- Prisma is the target standard for database access.
+- Every new persistence model must be defined in Prisma schema and accessed through `PrismaService` or a module repository that wraps it.
+- Do not add new TypeORM entities. Existing TypeORM code is legacy until a planned Prisma migration removes it.
+- Schema migrations must be versioned and reproducible.
+- Do not use `synchronize: true` in shared, staging, or production environments.
+- Raw queries are allowed only when Prisma cannot express the query clearly. They must use parameters, have tests, and document the reason outside code if the decision matters.
 
-## DTOs, inputs, outputs y modelos
+## DTOs, Inputs, Outputs, And Models
 
-- Toda entrada HTTP debe tener un DTO dedicado con `class-validator` y, cuando corresponda, `class-transformer`.
-- No reutilizar modelos de base de datos como DTOs de entrada.
-- Definir DTOs de respuesta cuando la API publica no deba reflejar exactamente el modelo interno.
-- Mantener nombres consistentes: `CreateXDto`, `UpdateXDto`, `QueryXDto`, `XResponseDto`.
-- Usar enums de dominio para valores cerrados y documentarlos en Swagger.
-- No aceptar propiedades desconocidas. Mantener `ValidationPipe` con `whitelist`, `forbidNonWhitelisted` y `transform`.
+- Every HTTP input must have a dedicated DTO with `class-validator` and, when useful, `class-transformer`.
+- Do not reuse database models as input DTOs.
+- Define response DTOs when the public API should not mirror the internal model exactly.
+- Keep names consistent: `CreateXDto`, `UpdateXDto`, `QueryXDto`, `XResponseDto`.
+- Use domain enums for closed value sets and document them in Swagger.
+- Do not accept unknown properties. Keep `ValidationPipe` configured with `whitelist`, `forbidNonWhitelisted`, and `transform`.
 
-## Swagger y contrato HTTP
+## Swagger And HTTP Contract
 
-- Todo endpoint nuevo o modificado debe actualizar Swagger cuando sea posible.
-- Usar `@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiParam`, `@ApiQuery`, `@ApiBody` y `@ApiProperty` cuando aporten claridad al contrato.
-- Documentar status codes esperados, errores relevantes y DTOs de respuesta.
-- Mantener `README.md` y documentos en `docs/` alineados con cambios de rutas, variables, comandos o contratos.
-- No introducir endpoints no documentados salvo que sean internos y se justifique explicitamente.
-- La documentacion API versionada se genera con `pnpm api:docs:generate`: compila Nest, crea `docs/api/openapi.json` desde Swagger y genera `docs/api/postman_collection.json` desde OpenAPI con `openapi-to-postmanv2`.
-- Si se modifica un controller, DTO, Swagger decorator, ruta o contrato HTTP, ejecutar `pnpm api:docs:generate` y commitear los archivos generados.
+- Every new or modified endpoint must update Swagger when possible.
+- Use `@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiParam`, `@ApiQuery`, `@ApiBody`, and `@ApiProperty` when they clarify the contract.
+- Document expected status codes, relevant errors, and response DTOs.
+- Keep `README.md` and documents in `docs/` aligned with route, environment variable, command, and contract changes.
+- Do not introduce undocumented endpoints unless they are internal and explicitly justified.
+- Versioned API documentation is generated with libraries, not custom handwritten output: `pnpm api:docs:generate` builds Nest, creates `docs/api/openapi.json` from `@nestjs/swagger`, then creates `docs/api/postman_collection.json` from OpenAPI with `openapi-to-postmanv2`.
+- If a controller, DTO, Swagger decorator, route, or HTTP contract changes, run `pnpm api:docs:generate` and commit the generated files.
 
-## Automatizacion operativa
+## Operational Automation
 
-- Si una tarea requiere pasos repetibles y programables, agregar o reutilizar scripts en vez de gastar prompts/tokens repitiendo instrucciones manuales.
-- El script `pnpm post-feature` es el trigger esperado antes de crear o actualizar PRs de backend: regenera Swagger/Postman, ejecuta typecheck, ejecuta tests y verifica que las colecciones queden actualizadas.
-- Si `pnpm post-feature` falla por tests o entorno local, corregir la causa cuando sea parte del cambio. Si el fallo es externo o conocido, documentarlo en la respuesta final y en el PR.
-- No automatizar pasos destructivos ni acciones que requieran criterio de producto sin una aprobacion explicita.
+- If a task requires repeatable programmable steps, add or reuse scripts instead of spending prompts/tokens repeating manual instructions.
+- `pnpm post-feature` is the expected backend trigger before creating or updating PRs: it regenerates Swagger/Postman, runs typecheck, runs tests, and verifies committed API docs.
+- If `pnpm post-feature` fails because of tests or local environment, fix the cause when it is part of the change. If the failure is external or known, document it in the final response and PR.
+- Do not automate destructive steps or product decisions without explicit approval.
 
-## Testing obligatorio
+## Required Testing
 
-- Todo archivo nuevo o modificado con logica debe tener tests unitarios asociados.
-- Todo controller nuevo o endpoint modificado debe tener cobertura e2e o de integracion HTTP.
-- Todo service con reglas de negocio, transacciones o consultas debe tener unit tests con dependencias mockeadas o fakes.
-- Todo DTO con validaciones no triviales debe tener tests de validacion o estar cubierto por e2e que pruebe entradas invalidas.
-- Toda correccion de bug debe incluir un test que falle sin la correccion.
-- No bajar cobertura ni eliminar tests sin reemplazo equivalente.
-- Los tests deben ser deterministas: sin dependencias de red externa, tiempo real no controlado ni orden aleatorio no fijado.
-- Antes de cerrar un cambio, ejecutar como minimo:
+- Every new or modified file with logic must have associated unit tests.
+- Every new controller or modified endpoint must have e2e or HTTP integration coverage.
+- Every service with business rules, transactions, or queries must have unit tests with mocked dependencies or fakes.
+- Every DTO with non-trivial validation must have validation tests or be covered by e2e invalid-input cases.
+- Every bug fix must include a test that fails without the fix.
+- Do not lower coverage or remove tests without equivalent replacement.
+- Tests must be deterministic: no external network, uncontrolled real time, or unfixed random order.
+- Before closing a change, run at minimum:
   - `pnpm typecheck`
   - `pnpm test`
-  - e2e correspondiente si existe script dedicado
+  - the relevant e2e script when one exists
 
-## Librerias y pinning
+## Libraries And Pinning
 
-- Usar librerias oficiales de NestJS o paquetes ampliamente mantenidos antes de introducir dependencias pequenas o poco confiables.
-- Justificar toda dependencia nueva en el PR o documento de cambio: problema que resuelve, alternativa considerada y superficie de mantenimiento.
-- Antes de agregar una dependencia, verificar mantenimiento, comunidad, licencia, salud del repositorio, fecha de ultima release, issues/PRs activos, volumen de uso razonable y vulnerabilidades conocidas.
-- Preferir librerias simples, ampliamente usadas y mantenidas sobre implementaciones propias cuando resuelven un problema estandar. Ejemplos aceptables: Husky para Git hooks y `openapi-to-postmanv2` para generar colecciones Postman desde OpenAPI.
-- Pinear versiones exactas en `package.json`. No usar rangos como `^` o `~` para dependencias nuevas.
-- Mantener `pnpm-lock.yaml` actualizado y versionado.
-- No actualizar paquetes de forma masiva junto con cambios funcionales. Separar upgrades de dependencias en cambios dedicados.
-- Revisar breaking changes y notas de migracion antes de subir versiones mayores.
-- Ejecutar auditoria de dependencias cuando se agreguen o actualicen paquetes, y documentar cualquier vulnerabilidad aceptada con su motivo y plan de remediacion.
+- Prefer official NestJS libraries or broadly maintained packages before adding small or low-trust dependencies.
+- Justify every new dependency in the PR or change document: problem solved, alternatives considered, and maintenance surface.
+- Before adding a dependency, check maintenance, community, license, repository health, latest release date, active issues/PRs, usage volume, and known vulnerabilities.
+- Prefer simple, widely used, maintained libraries over custom implementations when they solve a standard problem. Acceptable examples include Husky for Git hooks and `openapi-to-postmanv2` for Postman collection generation from OpenAPI.
+- Pin exact versions in `package.json`. Do not use `^` or `~` for new dependencies.
+- Keep `pnpm-lock.yaml` updated and committed.
+- Do not mix broad dependency upgrades with functional changes. Put upgrades in dedicated changes.
+- Review breaking changes and migration notes before major upgrades.
+- Run dependency audit when adding or updating packages, and document any accepted vulnerability with reason and remediation plan.
 
-## Git, ramas, push y PR
+## Git, Branches, Push, And PRs
 
-- Trabajar en ramas descriptivas y acotadas al cambio: `backend/<tema>`, `fix/<tema>`, `chore/<tema>`.
-- No pushear directo a `main`.
-- Antes de commitear o pushear, revisar `git status` y confirmar que no se incluyen cambios de otro agente, conversacion o tarea.
-- Antes de pushear, revisar `git branch --show-current` y confirmar que no se esta usando una rama anterior, heredada o equivocada.
-- Antes de pushear, revisar `git rev-parse --abbrev-ref --symbolic-full-name @{u}` cuando exista upstream y confirmar que el upstream corresponde a la misma rama logica.
-- El nombre de la rama debe coincidir con el alcance del cambio y con el PR que se va a crear o actualizar.
-- Si el nombre local y el upstream no coinciden, detenerse y corregir la rama o pedir confirmacion antes de pushear.
-- No pushear desde una rama reutilizada si el cambio actual no corresponde exactamente a esa rama. Crear una rama nueva y descriptiva antes de commitear.
-- Cada PR debe contener un solo cambio logico. No mezclar features, fixes, refactors, migraciones, upgrades de dependencias o cambios de documentacion no relacionados en el mismo PR.
-- No agregar "un cambio mas" a un PR existente si no pertenece al alcance original. Crear otra rama y otro PR.
-- Antes de crear o actualizar un PR, confirmar que la rama actual, el upstream y el titulo/alcance del PR describen el mismo cambio.
-- Al terminar cambios de codigo, crear o actualizar un PR salvo que el usuario indique explicitamente que no se debe pushear, falten credenciales o el arbol tenga cambios ajenos que hagan inseguro incluirlos.
-- Cada respuesta final despues de cambios debe indicar el estado del PR. Si existe PR, incluir el link y pedir explicitamente al usuario que lo revise. Si no existe PR, explicar por que no se creo y que falta para crearlo.
-- El PR debe explicar alcance, cambios de contrato/API, migraciones o seed data, pruebas ejecutadas, riesgos y follow-ups.
-- PRs con dependencias nuevas deben incluir justificacion, auditoria y confirmar pinning exacto.
-- PRs con cambios de contrato deben actualizar Swagger/OpenAPI, colecciones en `docs/api` y documentacion relacionada.
-- Antes de pushear un PR de backend, preferir `pnpm post-feature` sobre comandos sueltos cuando el cambio toca codigo o contrato API.
-- Los commits deben ser chicos, coherentes y con mensaje imperativo.
-- No reescribir historia compartida sin coordinacion.
+- Work on descriptive, focused branches: `backend/<topic>`, `fix/<topic>`, or `chore/<topic>`.
+- Do not push directly to `main`.
+- Before committing or pushing, review `git status` and confirm no changes from another agent, conversation, or task are included.
+- Before pushing, review `git branch --show-current` and confirm the branch is not old, inherited, or wrong.
+- Before pushing, review `git rev-parse --abbrev-ref --symbolic-full-name @{u}` when an upstream exists and confirm it matches the same logical branch.
+- The branch name must match the change scope and the PR that will be created or updated.
+- If the local branch and upstream do not match, stop and fix the branch or ask for confirmation before pushing.
+- Do not push from a reused branch if the current change does not exactly match that branch. Create a new descriptive branch before committing.
+- Every PR must contain one logical change. Do not mix features, fixes, refactors, migrations, dependency upgrades, or unrelated docs changes.
+- Do not add "one more change" to an existing PR if it does not belong to the original scope. Create another branch and PR.
+- Before creating or updating a PR, confirm the branch, upstream, title, and scope all describe the same change.
+- After code changes, create or update a PR unless the user explicitly says not to push, credentials are missing, or the tree has unrelated changes that make inclusion unsafe.
+- Every final response after changes must state PR status. If a PR exists, include the link and explicitly ask the user to review it. If no PR exists, explain why and what is needed.
+- The PR must explain scope, API/contract changes, migrations or seed data, tests run, risks, and follow-ups.
+- PRs with new dependencies must include justification, audit status, and exact pinning confirmation.
+- PRs with contract changes must update Swagger/OpenAPI, collections in `docs/api`, and related documentation.
+- Before pushing a backend PR, prefer `pnpm post-feature` over separate commands when the change touches code or the API contract.
+- Commits should be small, coherent, and imperative.
+- Do not rewrite shared history without coordination.
 
-## Documentacion y comentarios
+## Documentation And Comments
 
-- Preferir codigo claro, nombres precisos y funciones pequenas antes que comentarios.
-- No agregar comentarios obvios en el codigo.
-- Si una decision necesita contexto, documentarla en `docs/` o en el README del modulo correspondiente.
-- Los comentarios en codigo se permiten solo para explicar una restriccion no evidente, una decision de seguridad, una consulta compleja o una integracion externa con comportamiento inesperado.
-- Mantener ejemplos de uso, variables de entorno y comandos actualizados.
+- All Markdown documentation in this repository must be written in English.
+- Prefer clear code, precise names, and small functions over comments.
+- Do not add obvious code comments.
+- If a decision needs context, document it in `docs/` or the relevant module README.
+- Code comments are allowed only to explain a non-obvious constraint, security decision, complex query, or external integration with surprising behavior.
+- Keep usage examples, environment variables, and commands updated.
 
-## Estilo de implementacion
+## Implementation Style
 
-- Escribir TypeScript estricto y tipado. Evitar `any`; si es inevitable, limitar su alcance y explicar el motivo.
-- Mantener funciones con una responsabilidad clara.
-- Usar errores HTTP de NestJS (`BadRequestException`, `NotFoundException`, etc.) en la frontera HTTP o capa de aplicacion.
-- Centralizar configuracion en `ConfigModule`/`ConfigService`.
-- Evitar logica de negocio en decorators, pipes o interceptors; esas piezas deben ser transversales y pequenas.
-- No mezclar refactors grandes con features. Si una mejora estructural es necesaria, hacerla en commits separados.
+- Write strict, typed TypeScript. Avoid `any`; if unavoidable, limit its scope and explain why.
+- Keep functions focused on one responsibility.
+- Use NestJS HTTP errors (`BadRequestException`, `NotFoundException`, etc.) at the HTTP boundary or application layer.
+- Centralize configuration in `ConfigModule`/`ConfigService`.
+- Avoid business logic in decorators, pipes, or interceptors; those pieces should stay small and cross-cutting.
+- Do not mix large refactors with features. If a structural improvement is required, make it in separate commits.
 
-## Checklist antes de entregar
+## Delivery Checklist
 
-- La estructura respeta modulo, controller, service, DTOs y persistencia definida.
-- No se agrego acoplamiento innecesario ni dependencias cruzadas.
-- Swagger refleja los cambios del contrato HTTP.
-- Hay unit tests para cada archivo con logica modificado o creado.
-- Hay e2e/integracion para endpoints nuevos o modificados.
-- `pnpm typecheck` y `pnpm test` pasan.
-- Dependencias nuevas estan pineadas y justificadas.
-- Documentacion relevante actualizada.
+- Structure respects module, controller, service, DTO, and persistence boundaries.
+- No unnecessary coupling or cross-dependencies were added.
+- Swagger reflects HTTP contract changes.
+- Unit tests cover each new or modified logic file.
+- E2E/integration coverage exists for new or modified endpoints.
+- `pnpm typecheck` and `pnpm test` pass.
+- New dependencies are pinned and justified.
+- Relevant documentation is updated.

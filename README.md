@@ -1,8 +1,8 @@
 # queJugamos-be
 
-Backend NestJS para el catalogo de QueJugamos.
+NestJS backend for the QueJugamos catalog.
 
-Este repo es independiente del frontend para evitar repositorios Git anidados o superpuestos.
+This repository is independent from the frontend to avoid nested or overlapping Git repositories.
 
 ## Run locally
 
@@ -104,14 +104,15 @@ GAMES_FILTERS_CACHE_MAX_ENTRIES
 
 ## Documentation
 
-- [Modelo de datos](docs/DATA_MODEL.md)
+- [Data model](docs/DATA_MODEL.md)
 - [ERD](docs/ERD.md)
-- [Migraciones Prisma](docs/MIGRATIONS.md)
+- [Prisma migrations](docs/MIGRATIONS.md)
+- [API endpoints](docs/API_ENDPOINTS.md)
 - [HTTP QUERY](docs/HTTP_QUERY.md)
 - [Search behavior](docs/SEARCH.md)
 - [API collections](docs/API_COLLECTIONS.md)
-- [Errores RFC 9457](docs/ERRORS.md)
-- [Autenticacion OAuth2](docs/AUTH.md)
+- [RFC 9457 errors](docs/ERRORS.md)
+- [OAuth2 authentication](docs/AUTH.md)
 
 Generate committed Swagger/OpenAPI and Postman collection files with:
 
