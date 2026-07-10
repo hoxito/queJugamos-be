@@ -57,6 +57,7 @@ Base references:
 - Schema migrations must be versioned and reproducible.
 - Do not use `synchronize: true` in shared, staging, or production environments.
 - Raw queries are allowed only when Prisma cannot express the query clearly. They must use parameters, have tests, and document the reason outside code if the decision matters.
+- Do not compare Prisma error codes as magic strings in filters, controllers, or services. Add named constants and HTTP mappings to `src/common/prisma/prisma-errors.ts`, cover them with tests, and document externally visible behavior in `docs/ERRORS.md`.
 
 ## DTOs, Inputs, Outputs, And Models
 
