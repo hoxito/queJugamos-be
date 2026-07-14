@@ -141,6 +141,7 @@ Base references:
 - If a decision needs context, document it in `docs/` or the relevant module README.
 - Code comments are allowed only to explain a non-obvious constraint, security decision, complex query, or external integration with surprising behavior.
 - Keep usage examples, environment variables, and commands updated.
+- Game manuals, rules and material requirements must be source-backed data. Do not copy proprietary manual text into seeds or docs; link official PDFs as external assets unless redistribution permission is explicit. Keep the curation policy in `docs/GAME_CONTENT.md` aligned with seed behavior.
 
 ## Implementation Style
 
