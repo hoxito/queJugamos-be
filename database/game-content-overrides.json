@@ -148,5 +148,121 @@
         "sortOrder": 100
       }
     ]
+  },
+  "pictionary": {
+    "summaryMd": "A team drawing game where players sketch clues while teammates race to guess the word or phrase.",
+    "rulesSourceUrl": "https://service.mattel.com/us/productDetail.aspx?prodno=DKD47&siteid=27",
+    "sourceLabel": "Mattel customer support: Pictionary DKD47",
+    "sourceLicenseLabel": "External publisher reference",
+    "rulesMd": "## Objective\nBe the first team to reach the agreed finish condition by correctly guessing words or phrases from drawings.\n\n## Materials\nUse paper, pens or pencils, a timer and prompt cards or a prepared list of prompts. If using a board edition, also use the board, pawns and category die included with that edition.\n\n## Setup\nDivide players into teams. Place paper where the active sketcher can draw clearly. Decide whether the group is playing with a board, a target score or a fixed number of rounds. Shuffle or prepare the prompt deck.\n\n## Turn\nOn a team's turn, one player becomes the sketcher. Reveal a prompt only to the sketcher, start the timer and let the sketcher draw without speaking, writing letters or using numbers unless the group explicitly allows that variant. The sketcher's teammates may guess freely while the timer runs.\n\n## Correct Guess\nIf the team guesses the prompt before time expires, they score the turn. In board play, advance according to the edition's movement rule. In score play, award one point. The next turn passes according to the table's chosen order.\n\n## Failed Guess\nIf time expires before a correct guess, the team scores nothing and play passes to the next team.\n\n## All-Play Variant\nFor an all-play prompt, each team chooses a sketcher and all teams draw at the same time. The first team to guess correctly wins that prompt.\n\n## End Of Game\nIn board play, the first team to reach the final space and solve the required final prompt wins. In score play, the first team to reach the target score wins.",
+    "materialRequirements": {
+      "paper": { "quantity": 1, "notes": "Use loose sheets, a notebook or a drawing pad." },
+      "pen": { "quantity": 1, "notes": "Use one writing tool per active sketcher." },
+      "cards": { "quantity": 1, "notes": "Use prompt cards, a prompt list or generated prompts." },
+      "timer": { "quantity": 1, "notes": "Use the included timer or any phone timer." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://service.mattel.com/us/productDetail.aspx?prodno=DKD47&siteid=27",
+        "sourceUrl": "https://service.mattel.com/us/productDetail.aspx?prodno=DKD47&siteid=27",
+        "credit": "Mattel",
+        "licenseLabel": "External publisher reference",
+        "contentType": "text/html",
+        "altText": "Pictionary publisher support reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "codenames": {
+    "summaryMd": "A word-association team game where spymasters give one-word clues to identify hidden agents.",
+    "rulesSourceUrl": "https://www.czechgames.com/games/codenames",
+    "sourceLabel": "Czech Games Edition: Codenames",
+    "sourceLicenseLabel": "External publisher reference",
+    "rulesMd": "## Objective\nYour team wins by identifying all of its agents before the other team does, or immediately if the other team reveals the assassin.\n\n## Materials\nUse the codename word cards, key cards, agent tiles, bystander tiles, assassin tile and key card stand.\n\n## Setup\nLay 25 codename cards in a 5 by 5 grid. Split players into two teams and choose one spymaster for each team. The spymasters sit where only they can see the key card. Draw one key card and place it in the stand. The key card assigns each grid position to the red team, blue team, neutral bystanders or the assassin. The starting team has one extra agent tile.\n\n## Turn\nThe active spymaster gives exactly one clue word and one number. The clue should point to one or more cards belonging to that team. The number tells teammates how many cards the clue is intended to connect.\n\n## Guessing\nTeammates discuss and point to one card at a time. When a card is chosen, the spymaster covers it with the matching tile from the key. If it is their team's agent, they may continue guessing up to the clue number plus one optional extra guess. If it is a bystander or opposing agent, the turn ends. If it is the assassin, that team loses immediately.\n\n## Clue Limits\nA clue must relate to the meaning of the target words, not to spelling position, table position, card orientation or private information. Groups should agree before play how strict they want to be with proper nouns, abbreviations and homophones.\n\n## End Of Game\nA team wins when all of its agents are covered. A team loses immediately if it reveals the assassin.",
+    "materialRequirements": {
+      "cards": { "quantity": 1, "notes": "Word cards, key cards and role tiles from a Codenames set." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://www.czechgames.com/games/codenames",
+        "sourceUrl": "https://www.czechgames.com/games/codenames",
+        "credit": "Czech Games Edition",
+        "licenseLabel": "External publisher reference",
+        "contentType": "text/html",
+        "altText": "Codenames publisher reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "just-one": {
+    "summaryMd": "A cooperative word game where players give one-word clues, but duplicate clues are cancelled.",
+    "rulesSourceUrl": "https://www.rprod.com/en/games/just-one",
+    "sourceLabel": "Repos Production: Just One",
+    "sourceLicenseLabel": "External publisher reference",
+    "rulesMd": "## Objective\nWork together to guess as many mystery words as possible over the chosen set of cards.\n\n## Materials\nUse word cards, erasable boards or paper, markers or pencils and a way to hide each player's clue from the guesser.\n\n## Setup\nShuffle the word cards and create the round deck. Choose one player as the first guesser. The guesser draws a card without looking at its words and chooses or is assigned one numbered word on the card.\n\n## Clue Writing\nAll non-guessing players secretly write one clue word for the mystery word. A clue must be a single word. Do not use the mystery word itself, a direct translation, a same-family word or a clue that only changes spelling.\n\n## Compare Clues\nBefore the guesser sees any clues, clue-givers reveal their words to each other. Any identical clues are cancelled and hidden from the guesser. Groups should also cancel clues that are effectively the same word by house agreement.\n\n## Guess\nThe guesser sees only the remaining valid clues and makes one guess. The team scores a success if the guess matches the mystery word. If the guess is wrong, the team loses that card and usually also removes an additional card as penalty. The guesser may pass if the visible clues seem too risky.\n\n## End Of Game\nAfter the round deck is resolved, count successful guesses and compare the result to the group's scoring scale.",
+    "materialRequirements": {
+      "cards": { "quantity": 1, "notes": "Use Just One word cards or a prepared list of mystery words." },
+      "boards": { "quantity": 7, "notes": "Use erasable easels, small boards or paper slips for clues." },
+      "markers": { "quantity": 7, "notes": "One marker or pencil per clue-giver." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://www.rprod.com/en/games/just-one",
+        "sourceUrl": "https://www.rprod.com/en/games/just-one",
+        "credit": "Repos Production",
+        "licenseLabel": "External publisher reference",
+        "contentType": "text/html",
+        "altText": "Just One publisher reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "werewolf": {
+    "summaryMd": "A social deduction game where villagers debate by day while werewolves secretly eliminate players at night.",
+    "rulesSourceUrl": "https://playwerewolf.co/",
+    "sourceLabel": "Werewolf by Stellar Factory",
+    "sourceLicenseLabel": "External publisher reference",
+    "rulesMd": "## Objective\nVillagers win by eliminating all werewolves. Werewolves win when they equal or outnumber the surviving villagers, or when the village can no longer remove them.\n\n## Materials\nUse role cards or slips assigning each player a secret role. A moderator is strongly recommended. Basic roles are villagers and werewolves; optional roles can include a seer, doctor or other special characters.\n\n## Setup\nChoose a moderator. Prepare a role mix suitable for the player count, usually with a small werewolf minority. Deal one secret role to each player. The moderator explains which roles are in play and whether eliminated players reveal their roles.\n\n## Night Phase\nAll players close their eyes. The moderator wakes each active night role in order. Werewolves silently choose one player to eliminate. If using a seer, the seer may check one player's alignment. If using a doctor, the doctor may protect one player according to the agreed variant.\n\n## Day Phase\nThe moderator announces the night result. Surviving players discuss who may be a werewolf. Players may claim, accuse, defend and reason publicly.\n\n## Vote\nAfter discussion, the group votes to eliminate one player. Use majority vote or another agreed voting rule. The eliminated player leaves active play and may reveal their role if that rule was chosen.\n\n## End Of Game\nCheck victory after each night and vote. Villagers win when no werewolves remain. Werewolves win when they cannot be outvoted by the remaining village.",
+    "materialRequirements": {
+      "cards": { "quantity": 1, "notes": "Use role cards or handwritten role slips." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://playwerewolf.co/",
+        "sourceUrl": "https://playwerewolf.co/",
+        "credit": "Stellar Factory",
+        "licenseLabel": "External publisher reference",
+        "contentType": "text/html",
+        "altText": "Werewolf publisher reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "the-resistance": {
+    "summaryMd": "A hidden-role mission game where Resistance players approve teams while spies try to sabotage missions.",
+    "rulesSourceUrl": "https://indieboardsandcards.com/type/the-resistance/",
+    "sourceLabel": "Indie Boards and Cards: The Resistance",
+    "sourceLicenseLabel": "External publisher reference",
+    "rulesMd": "## Objective\nThe Resistance wins by completing three successful missions. The spies win by causing three failed missions or by making the group reject five mission teams for the same mission.\n\n## Materials\nUse character cards for secret alignment, mission cards, vote cards, team cards or tokens, score markers, a round marker and a leader marker.\n\n## Setup\nChoose the player count and assign the correct number of Resistance members and spies for that count. Shuffle and deal one secret character card to each player. Pick a starting leader. The moderator or leader runs the spy reveal: all players close their eyes, spies open their eyes to identify each other, then close their eyes before everyone wakes.\n\n## Mission Team Proposal\nEach mission has a required team size based on player count and mission number. The leader proposes that many players for the mission. Players may discuss before and after the proposal.\n\n## Team Vote\nAll players secretly choose approve or reject, then reveal votes together. If approvals are a strict majority, the mission team is accepted. If the vote ties or rejects are the majority, the team is rejected, leadership passes and the same mission is proposed again. If five teams are rejected for one mission, the spies win.\n\n## Mission Resolution\nEach player on the approved mission secretly submits a success or fail card. Resistance players must submit success. Spies may submit success or fail. Shuffle and reveal mission cards. The mission succeeds if no fail cards are revealed, except in variants or player counts where a mission may require more than one fail.\n\n## End Of Game\nAdvance the score after each mission. The Resistance wins when three missions succeed. The spies win when three missions fail or when five team proposals fail on a single mission.",
+    "materialRequirements": {
+      "cards": { "quantity": 1, "notes": "Character, vote and mission cards from The Resistance or equivalent role/vote slips." },
+      "tokens": { "quantity": 1, "notes": "Use team markers, score markers and a leader marker." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://indieboardsandcards.com/type/the-resistance/",
+        "sourceUrl": "https://indieboardsandcards.com/type/the-resistance/",
+        "credit": "Indie Boards and Cards",
+        "licenseLabel": "External publisher reference",
+        "contentType": "text/html",
+        "altText": "The Resistance publisher reference",
+        "sortOrder": 100
+      }
+    ]
   }
 }
