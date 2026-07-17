@@ -1,0 +1,152 @@
+{
+  "tateti": {
+    "summaryMd": "A two-player alignment game played on a 3 by 3 grid.",
+    "rulesSourceUrl": "https://en.wikipedia.org/wiki/Tic-tac-toe",
+    "sourceLabel": "Wikipedia: Tic-tac-toe",
+    "sourceLicenseLabel": "CC BY-SA reference; rules text is original project wording",
+    "rulesMd": "## Objective\nBe the first player to place three of your marks in one straight line: horizontal, vertical or diagonal.\n\n## Materials\nUse one sheet of paper and one pen or pencil. Draw a 3 by 3 grid. One player uses X and the other uses O.\n\n## Setup\nChoose the first player. The grid starts empty.\n\n## Turn\nOn your turn, write your mark in one empty square. Players alternate turns and may not move or erase previous marks.\n\n## End Of Game\nA player wins immediately after completing three marks in a row, column or diagonal. If all nine squares are filled and no player has three in a line, the game is a draw.",
+    "materialRequirements": {
+      "paper": { "quantity": 1, "notes": "One sheet is enough to draw the grid." },
+      "pen": { "quantity": 1, "notes": "One pen or pencil is enough if players use X and O." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://en.wikipedia.org/wiki/Tic-tac-toe",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Tic-tac-toe",
+        "credit": "Wikipedia",
+        "licenseLabel": "CC BY-SA external reference",
+        "contentType": "text/html",
+        "altText": "Tateti rules reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "tutifruti": {
+    "summaryMd": "A word party game where players race to write category answers for a chosen letter.",
+    "rulesSourceUrl": "https://en.wikipedia.org/wiki/Scattergories",
+    "sourceLabel": "Traditional category word game; Scattergories reference",
+    "sourceLicenseLabel": "Original project wording",
+    "rulesMd": "## Objective\nScore points by writing valid words that match several categories and start with the chosen letter.\n\n## Materials\nEach player needs paper and a pen. Use a timer, phone timer or agreed time limit.\n\n## Setup\nAgree on categories such as name, place, animal, object, food and color. Choose a random letter for the round.\n\n## Round\nStart the timer. Every player writes one answer per category using words that begin with the selected letter. Stop when time ends or when a player calls stop according to the house rule.\n\n## Scoring\nA valid answer scores if it fits the category and starts with the letter. A common scoring variant gives 10 points for a unique answer, 5 points for an answer shared with another player, and 0 points for blank or invalid answers.\n\n## End Of Game\nAfter the agreed number of rounds, the player with the highest total score wins.",
+    "materialRequirements": {
+      "paper": { "quantity": 1, "notes": "Each player needs a score sheet or writing area." },
+      "pen": { "quantity": 1, "notes": "Each player needs a pen or pencil." },
+      "timer": { "quantity": 1, "notes": "Use any timer or phone timer for each round." }
+    }
+  },
+  "chess": {
+    "summaryMd": "A two-player abstract strategy game where checkmate is the winning condition.",
+    "rulesSourceUrl": "https://handbook.fide.com/chapter/E012023",
+    "sourceLabel": "FIDE Laws of Chess taking effect from 1 January 2023",
+    "sourceLicenseLabel": "External official reference; rules text is original project summary",
+    "rulesMd": "## Objective\nCheckmate the opposing king. A king is checkmated when it is under attack and the opponent has no legal move that removes the attack.\n\n## Materials\nUse a chessboard with 64 squares and 32 pieces: one king, one queen, two rooks, two bishops, two knights and eight pawns per side.\n\n## Setup\nPlace the board with a light square on each player's right. Set pieces on the two nearest ranks: rooks in corners, then knights, bishops, queen on her color, king on the remaining central square, and pawns in front.\n\n## Turn\nWhite moves first, then players alternate. A legal move follows the movement rule of the chosen piece and may not leave that player's king in check.\n\n## Special Rules\nPawns may move two squares from their starting square if both squares are empty, capture diagonally, promote on the last rank and may capture en passant only on the immediately following move. Castling moves the king two squares toward a rook and the rook to the square crossed by the king when all castling conditions are legal.\n\n## End Of Game\nThe game ends by checkmate, resignation, stalemate, agreed draw or another draw condition supported by the rule set being used.",
+    "materialRequirements": {
+      "chess-set": { "quantity": 1, "notes": "One complete chess board and 32 pieces." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://handbook.fide.com/chapter/E012023",
+        "sourceUrl": "https://handbook.fide.com/chapter/E012023",
+        "credit": "FIDE",
+        "licenseLabel": "Official external reference",
+        "contentType": "text/html",
+        "altText": "FIDE Laws of Chess reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "checkers": {
+    "summaryMd": "A two-player draughts game on an 8 by 8 board using diagonal movement and mandatory captures.",
+    "rulesSourceUrl": "https://en.wikipedia.org/wiki/English_draughts",
+    "sourceLabel": "English draughts public reference",
+    "sourceLicenseLabel": "CC BY-SA reference; rules text is original project wording",
+    "rulesMd": "## Objective\nCapture all opposing pieces or leave the opponent with no legal move.\n\n## Materials\nUse an 8 by 8 checkerboard and 12 pieces for each player.\n\n## Setup\nOnly dark squares are used. Each player places 12 pieces on the dark squares of the three rows nearest them. Dark moves first in the common American/English rule set.\n\n## Turn\nMove one piece diagonally forward to an adjacent empty dark square. If a capture is available, the player must capture by jumping diagonally over an adjacent opposing piece into the empty square beyond it.\n\n## Kings\nWhen a piece reaches the farthest row, it becomes a king. Kings may move and capture diagonally forward or backward.\n\n## Multiple Captures\nAfter a jump, if the same piece can continue capturing, it must continue. Captured pieces are removed after the move according to the rule set being used.\n\n## End Of Game\nA player wins when the opponent has no pieces left or no legal move.",
+    "materialRequirements": {
+      "checkerboard": { "quantity": 1, "notes": "One 8 by 8 checkerboard." },
+      "tokens": { "quantity": 24, "notes": "Twelve pieces per player." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://en.wikipedia.org/wiki/English_draughts",
+        "sourceUrl": "https://en.wikipedia.org/wiki/English_draughts",
+        "credit": "Wikipedia",
+        "licenseLabel": "CC BY-SA external reference",
+        "contentType": "text/html",
+        "altText": "English draughts rules reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "go": {
+    "summaryMd": "A two-player territory game where players place stones on intersections and surround territory.",
+    "rulesSourceUrl": "https://en.wikipedia.org/wiki/Rules_of_Go",
+    "sourceLabel": "Rules of Go public reference",
+    "sourceLicenseLabel": "CC BY-SA reference; rules text is original project wording",
+    "rulesMd": "## Objective\nControl more territory than the opponent after both players pass.\n\n## Materials\nUse a Go board, commonly 19 by 19 lines for the full game, and black and white stones.\n\n## Setup\nThe board starts empty unless handicap stones are agreed. Black plays first.\n\n## Turn\nOn your turn, place one stone of your color on an empty intersection or pass. Stones connected orthogonally form groups.\n\n## Liberties And Captures\nA group must have at least one empty adjacent intersection, called a liberty. When a move removes the last liberty from an opposing group, that group is captured and removed.\n\n## Repetition And Suicide\nUse the agreed ruleset for ko, superko and suicide. Beginner games should choose one ruleset before play starts.\n\n## End Of Game\nThe game ends when both players pass consecutively. Score according to the chosen ruleset. Area scoring counts stones plus surrounded territory; territory scoring counts surrounded empty points and captures.",
+    "materialRequirements": {
+      "go-board": { "quantity": 1, "notes": "One Go board; 19 by 19 is standard, smaller boards work for learning." },
+      "stones": { "quantity": 1, "notes": "Black and white stones; use enough stones for the board size." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://en.wikipedia.org/wiki/Rules_of_Go",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Rules_of_Go",
+        "credit": "Wikipedia",
+        "licenseLabel": "CC BY-SA external reference",
+        "contentType": "text/html",
+        "altText": "Rules of Go reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "backgammon": {
+    "summaryMd": "A two-player race game where checkers move by dice rolls and bear off from the home board.",
+    "rulesSourceUrl": "https://en.wikipedia.org/wiki/Backgammon",
+    "sourceLabel": "Backgammon public reference",
+    "sourceLicenseLabel": "CC BY-SA reference; rules text is original project wording",
+    "rulesMd": "## Objective\nMove all of your checkers into your home board and then bear them off before your opponent does.\n\n## Materials\nUse a backgammon board, 15 checkers per player and two dice. A doubling cube is used for match or money play variants.\n\n## Setup\nUse the standard 24-point setup: each player starts with two checkers on their 24-point, five on their 13-point, three on their 8-point and five on their 6-point.\n\n## Turn\nRoll two dice and move checkers according to each die. A checker may move only to an open point: empty, occupied by your own checkers or occupied by exactly one opposing checker.\n\n## Hitting And Entering\nLanding on a point with one opposing checker hits it and sends it to the bar. A player with checkers on the bar must enter them into the opponent's home board before moving other checkers.\n\n## Bearing Off\nOnce all your checkers are in your home board, you may bear them off using die rolls. The first player to bear off all checkers wins.\n\n## Variants\nDoubling, gammons and match scoring should be agreed before play.",
+    "materialRequirements": {
+      "backgammon-board": { "quantity": 1, "notes": "One board with 24 points." },
+      "dice": { "quantity": 2, "notes": "Two dice are enough for casual play." },
+      "tokens": { "quantity": 30, "notes": "Fifteen checkers per player." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://en.wikipedia.org/wiki/Backgammon",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Backgammon",
+        "credit": "Wikipedia",
+        "licenseLabel": "CC BY-SA external reference",
+        "contentType": "text/html",
+        "altText": "Backgammon rules reference",
+        "sortOrder": 100
+      }
+    ]
+  },
+  "telestrations": {
+    "summaryMd": "A drawing-and-guessing party game playable with paper and pens using player-written prompts.",
+    "rulesSourceUrl": "https://en.wikipedia.org/wiki/Telestrations",
+    "sourceLabel": "Telestrations public reference plus paper-and-pen adaptation",
+    "sourceLicenseLabel": "Original project wording",
+    "rulesMd": "## Objective\nCreate a chain of prompts, drawings and guesses, then compare how the original prompt changed by the end of the round.\n\n## Materials\nUse paper and pens. Prompt cards are not required for this adaptation because players write their own starting prompts.\n\n## Setup\nGive each player a sheet or folded strip of paper. Each player secretly writes a short prompt at the top, then passes the paper to the next player.\n\n## Round\nThe next player reads the prompt, folds or hides it, draws it, and passes the paper on. The following player looks only at the drawing, writes a guess, hides the drawing and passes it on. Continue alternating drawing and guessing until the paper returns to its owner or everyone has contributed.\n\n## Reveal\nPlayers read each chain aloud from the original prompt through the final guess.\n\n## Scoring\nFor casual play, scoring is optional. If scoring is wanted, award points for funny favorite reveals, correct final guesses or best drawings by group vote.\n\n## End Of Game\nPlay the agreed number of rounds. If scoring was used, the highest score wins; otherwise the reveal is the goal.",
+    "materialRequirements": {
+      "paper": { "quantity": 1, "notes": "One sheet, notebook page or folded strip per player." },
+      "pen": { "quantity": 1, "notes": "One pen or pencil per player." }
+    },
+    "assets": [
+      {
+        "kind": "other",
+        "publicUrl": "https://en.wikipedia.org/wiki/Telestrations",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Telestrations",
+        "credit": "Wikipedia",
+        "licenseLabel": "CC BY-SA external reference",
+        "contentType": "text/html",
+        "altText": "Telestrations reference",
+        "sortOrder": 100
+      }
+    ]
+  }
+}

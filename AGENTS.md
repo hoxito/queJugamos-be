@@ -57,6 +57,7 @@ Base references:
 - Schema migrations must be versioned and reproducible.
 - Do not use `synchronize: true` in shared, staging, or production environments.
 - Raw queries are allowed only when Prisma cannot express the query clearly. They must use parameters, have tests, and document the reason outside code if the decision matters.
+- Do not compare Prisma error codes as magic strings in filters, controllers, or services. Add named constants and HTTP mappings to `src/common/prisma/prisma-errors.ts`, cover them with tests, and document externally visible behavior in `docs/ERRORS.md`.
 
 ## DTOs, Inputs, Outputs, And Models
 
@@ -140,6 +141,7 @@ Base references:
 - If a decision needs context, document it in `docs/` or the relevant module README.
 - Code comments are allowed only to explain a non-obvious constraint, security decision, complex query, or external integration with surprising behavior.
 - Keep usage examples, environment variables, and commands updated.
+- Game manuals, rules and material requirements must be production-ready, complete enough for users to play correctly, and source-backed. Reuse `games.status` as the logical enabled flag: only `approved` games are public/enabled, and seeded games without curated overrides must remain `pending`. Keep the curation policy in `docs/GAME_CONTENT.md` aligned with seed behavior.
 
 ## Implementation Style
 

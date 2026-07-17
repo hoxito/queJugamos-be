@@ -124,6 +124,7 @@ const metadataOverrides = {
 };
 
 const materialDetails = {
+  "backgammon-board": ["Backgammon board", "board", 1, "Board with 24 points."],
   bags: ["Bags", "bags", 1, "Opaque draw bags or player bags."],
   blocks: ["Blocks", "blocks", 54, "Wooden or plastic stacking blocks."],
   board: ["Board", "board", 1, "Main game board."],
@@ -133,6 +134,7 @@ const materialDetails = {
   "chess-set": ["Chess set", "pieces", 1, "Chess board and 32 pieces."],
   checkerboard: ["Checkerboard", "board", 1, "8 by 8 checkerboard."],
   "cribbage-board": ["Cribbage board", "board", 1, "Score track with pegs."],
+  cubes: ["Cubes", "tokens", 40, "Wooden or plastic cubes."],
   dice: ["Dice", "dice", 2, "Standard dice or game-specific dice."],
   discs: ["Discs", "pieces", 42, "Colored player discs."],
   dominoes: ["Dominoes", "tiles", 28, "A domino set."],
@@ -163,7 +165,10 @@ const materialDetails = {
 
 async function main() {
   const curatedGames = JSON.parse(await readFile(path.join(__dirname, "..", "database", "curated-games.json"), "utf8"));
-  const games = [...localGames, ...curatedGames];
+  const contentOverrides = JSON.parse(
+    await readFile(path.join(__dirname, "..", "database", "game-content-overrides.json"), "utf8")
+  );
+  const games = [...localGames, ...curatedGames].map((game) => applyContentOverride(game, contentOverrides[game.slug]));
 
   await prisma.user.upsert({
     where: { email: "admin@quejugamos.local" },
@@ -216,7 +221,7 @@ async function main() {
       where: { slug: game.slug },
       update: {
         title: game.title,
-        summaryMd: summaryFor(game),
+        summaryMd: game.summaryMd ?? summaryFor(game),
         rulesMd: rulesFor(game),
         rulesSourceUrl: game.rulesSourceUrl ?? null,
         minPlayers: metadata.minPlayers,
@@ -226,12 +231,12 @@ async function main() {
         durationMinutes: metadata.durationMinutes,
         indoor: true,
         outdoor: Boolean(game.outdoor),
-        status: "approved"
+        status: publicationStatusFor(game)
       },
       create: {
         title: game.title,
         slug: game.slug,
-        summaryMd: summaryFor(game),
+        summaryMd: game.summaryMd ?? summaryFor(game),
         rulesMd: rulesFor(game),
         rulesSourceUrl: game.rulesSourceUrl ?? null,
         minPlayers: metadata.minPlayers,
@@ -241,7 +246,7 @@ async function main() {
         durationMinutes: metadata.durationMinutes,
         indoor: true,
         outdoor: Boolean(game.outdoor),
-        status: "approved"
+        status: publicationStatusFor(game)
       }
     });
 
@@ -253,12 +258,13 @@ async function main() {
     await prisma.gameMaterial.createMany({
       data: game.materials.map((materialSlug) => {
         const detail = materialDetails[materialSlug];
+        const requirement = game.materialRequirements?.[materialSlug];
         return {
           gameId: savedGame.id,
           materialId: materialBySlug.get(materialSlug),
           requirementType: "required",
-          quantity: detail?.[2] ?? 1,
-          notes: detail?.[3] ?? `Use ${slugToName(materialSlug).toLowerCase()} for setup or scoring.`
+          quantity: requirement?.quantity ?? detail?.[2] ?? 1,
+          notes: requirement?.notes ?? detail?.[3] ?? `Use ${slugToName(materialSlug).toLowerCase()} for setup or scoring.`
         };
       })
     });
@@ -270,22 +276,7 @@ async function main() {
         .map((categoryId) => ({ gameId: savedGame.id, categoryId }))
     });
 
-    if (game.rulesSourceUrl) {
-      await prisma.gameAsset.create({
-        data: {
-          gameId: savedGame.id,
-          kind: "other",
-          sourceType: "manual_url",
-          publicUrl: game.rulesSourceUrl,
-          sourceUrl: game.rulesSourceUrl,
-          credit: "Wikipedia",
-          licenseLabel: "External HTML reference",
-          contentType: "text/html",
-          altText: `${game.title} rules reference`,
-          sortOrder: 100
-        }
-      });
-    }
+    await createGameAssets(savedGame.id, game);
 
     const usedRatingComments = new Set();
     const ratings = ratingsFor(ratingTarget).map((value, ratingIndex) => {
@@ -310,6 +301,21 @@ async function main() {
       }
     });
   }
+}
+
+function applyContentOverride(game, override) {
+  if (!override) return game;
+  return {
+    ...game,
+    ...override,
+    contentReady: true,
+    materials: override.materials ?? game.materials,
+    categories: override.categories ?? game.categories
+  };
+}
+
+function publicationStatusFor(game) {
+  return game.contentReady ? "approved" : "pending";
 }
 
 function metadataFor(game) {
@@ -366,21 +372,59 @@ function ratingsFor(target) {
 }
 
 function rulesFor(game) {
+  if (game.rulesMd?.includes("## Objective")) return game.rulesMd;
+
   const base = game.rulesMd.replace(/\s+/g, " ").trim();
-  return `## Objetivo
+  return `## Objective
 ${base}
 
-## Preparacion
-Reuni los materiales indicados, separa el espacio de juego y entrega a cada participante sus componentes iniciales.
+## Setup
+Gather the listed materials, prepare the play area and give each participant the components they need.
 
-## Turno
-Los jugadores actuan en orden, aplican la accion principal del juego y actualizan tablero, mano, recursos o puntuacion segun corresponda.
+## Turn
+Players act in order, resolve the game's main action and update the board, hand, resources or score as appropriate.
 
-## Fin de partida
-La partida termina cuando se cumple la condicion de victoria del juego o cuando ya no quedan acciones legales relevantes.
+## End Of Game
+The game ends when its victory condition is met or when no relevant legal actions remain.
 
-## Consejos
-Explica una ronda de ejemplo antes de empezar y deja visibles las condiciones de puntuacion para reducir consultas durante la partida.`;
+## Notes
+This is a short project-authored overview. Add a source-backed override in database/game-content-overrides.json before treating it as a detailed manual.`;
+}
+
+async function createGameAssets(gameId, game) {
+  const assets = game.assets?.length
+    ? game.assets
+    : game.rulesSourceUrl
+      ? [
+          {
+            kind: game.rulesSourceUrl.endsWith(".pdf") ? "rules_pdf" : "other",
+            publicUrl: game.rulesSourceUrl,
+            sourceUrl: game.rulesSourceUrl,
+            credit: game.sourceLabel ?? "External source",
+            licenseLabel: game.sourceLicenseLabel ?? "External reference",
+            contentType: game.rulesSourceUrl.endsWith(".pdf") ? "application/pdf" : "text/html",
+            altText: `${game.title} rules reference`,
+            sortOrder: 100
+          }
+        ]
+      : [];
+
+  for (const asset of assets) {
+    await prisma.gameAsset.create({
+      data: {
+        gameId,
+        kind: asset.kind,
+        sourceType: asset.sourceType ?? "manual_url",
+        publicUrl: asset.publicUrl,
+        sourceUrl: asset.sourceUrl,
+        credit: asset.credit,
+        licenseLabel: asset.licenseLabel,
+        contentType: asset.contentType,
+        altText: asset.altText,
+        sortOrder: asset.sortOrder ?? 0
+      }
+    });
+  }
 }
 
 function summaryFor(game) {

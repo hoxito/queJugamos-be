@@ -183,6 +183,8 @@ async function replaceAssets(gameId, game, bgg, publicImage) {
   await client.query("DELETE FROM game_assets WHERE game_id = $1", [gameId]);
 
   if (game.rulesSourceUrl) {
+    const rulesAssetKind = game.rulesSourceUrl.endsWith(".pdf") ? "rules_pdf" : "other";
+    const rulesContentType = game.rulesSourceUrl.endsWith(".pdf") ? "application/pdf" : "text/html";
     await client.query(
       `
         INSERT INTO game_assets (
@@ -197,9 +199,9 @@ async function replaceAssets(gameId, game, bgg, publicImage) {
           alt_text,
           sort_order
         )
-        VALUES ($1, 'rules_pdf', 'manual_url', $2, $2, $3, 'External rules reference', 'text/html', $4, 100)
+        VALUES ($1, $2, 'manual_url', $3, $3, $4, 'External rules reference', $5, $6, 100)
       `,
-      [gameId, game.rulesSourceUrl, game.title, `${game.title} rules`]
+      [gameId, rulesAssetKind, game.rulesSourceUrl, game.title, rulesContentType, `${game.title} rules`]
     );
   }
 

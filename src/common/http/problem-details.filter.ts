@@ -2,6 +2,7 @@ import { appendFile } from "node:fs/promises";
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import { HttpAdapterHost } from "@nestjs/core";
 import { Prisma } from "@prisma/client";
+import { getPrismaErrorReferenceUrl, getPrismaKnownErrorMetadata } from "../prisma/prisma-errors";
 
 type ProblemDetails = {
   type: string;
@@ -34,8 +35,8 @@ export class ProblemDetailsExceptionFilter implements ExceptionFilter {
   private statusFor(exception: unknown) {
     if (exception instanceof HttpException) return exception.getStatus();
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
-      if (exception.code === "P2002") return HttpStatus.CONFLICT;
-      if (exception.code === "P2025") return HttpStatus.NOT_FOUND;
+      const metadata = getPrismaKnownErrorMetadata(exception);
+      if (metadata) return metadata.status;
     }
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
@@ -43,11 +44,12 @@ export class ProblemDetailsExceptionFilter implements ExceptionFilter {
   private toProblemDetails(exception: unknown, status: number, instance: string): ProblemDetails {
     const title = this.defaultTitle(status);
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      const metadata = getPrismaKnownErrorMetadata(exception);
       return {
-        type: `https://www.prisma.io/docs/orm/reference/error-reference#${exception.code.toLowerCase()}`,
+        type: getPrismaErrorReferenceUrl(exception.code),
         title,
         status,
-        detail: this.prismaDetail(exception),
+        detail: metadata?.detail(exception) ?? "Database request failed.",
         instance
       };
     }
@@ -82,17 +84,6 @@ export class ProblemDetailsExceptionFilter implements ExceptionFilter {
       detail: String(response),
       instance
     };
-  }
-
-  private prismaDetail(exception: Prisma.PrismaClientKnownRequestError) {
-    if (exception.code === "P2002") {
-      const target = Array.isArray(exception.meta?.target) ? exception.meta.target.join(", ") : "unique field";
-      return `A resource with the same ${target} already exists.`;
-    }
-    if (exception.code === "P2025") {
-      return "The requested resource does not exist.";
-    }
-    return "Database request failed.";
   }
 
   private logException(exception: unknown, body: ProblemDetails) {
