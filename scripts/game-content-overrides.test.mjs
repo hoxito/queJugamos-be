@@ -18,6 +18,18 @@ describe("game content overrides", () => {
     }
   });
 
+  it("defines the production-ready seeded game set", () => {
+    assert.deepEqual(Object.keys(overrides).sort(), [
+      "backgammon",
+      "checkers",
+      "chess",
+      "go",
+      "tateti",
+      "telestrations",
+      "tutifruti"
+    ]);
+  });
+
   it("does not label HTML references as PDF assets", () => {
     for (const [slug, override] of Object.entries(overrides)) {
       for (const asset of override.assets ?? []) {

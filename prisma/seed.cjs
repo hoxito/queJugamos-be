@@ -231,7 +231,7 @@ async function main() {
         durationMinutes: metadata.durationMinutes,
         indoor: true,
         outdoor: Boolean(game.outdoor),
-        status: "approved"
+        status: publicationStatusFor(game)
       },
       create: {
         title: game.title,
@@ -246,7 +246,7 @@ async function main() {
         durationMinutes: metadata.durationMinutes,
         indoor: true,
         outdoor: Boolean(game.outdoor),
-        status: "approved"
+        status: publicationStatusFor(game)
       }
     });
 
@@ -308,9 +308,14 @@ function applyContentOverride(game, override) {
   return {
     ...game,
     ...override,
+    contentReady: true,
     materials: override.materials ?? game.materials,
     categories: override.categories ?? game.categories
   };
+}
+
+function publicationStatusFor(game) {
+  return game.contentReady ? "approved" : "pending";
 }
 
 function metadataFor(game) {

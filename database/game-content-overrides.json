@@ -130,7 +130,7 @@
     "summaryMd": "A drawing-and-guessing party game playable with paper and pens using player-written prompts.",
     "rulesSourceUrl": "https://en.wikipedia.org/wiki/Telestrations",
     "sourceLabel": "Telestrations public reference plus paper-and-pen adaptation",
-    "sourceLicenseLabel": "Original project wording; no proprietary manual copied",
+    "sourceLicenseLabel": "Original project wording",
     "rulesMd": "## Objective\nCreate a chain of prompts, drawings and guesses, then compare how the original prompt changed by the end of the round.\n\n## Materials\nUse paper and pens. Prompt cards are not required for this adaptation because players write their own starting prompts.\n\n## Setup\nGive each player a sheet or folded strip of paper. Each player secretly writes a short prompt at the top, then passes the paper to the next player.\n\n## Round\nThe next player reads the prompt, folds or hides it, draws it, and passes the paper on. The following player looks only at the drawing, writes a guess, hides the drawing and passes it on. Continue alternating drawing and guessing until the paper returns to its owner or everyone has contributed.\n\n## Reveal\nPlayers read each chain aloud from the original prompt through the final guess.\n\n## Scoring\nFor casual play, scoring is optional. If scoring is wanted, award points for funny favorite reveals, correct final guesses or best drawings by group vote.\n\n## End Of Game\nPlay the agreed number of rounds. If scoring was used, the highest score wins; otherwise the reveal is the goal.",
     "materialRequirements": {
       "paper": { "quantity": 1, "notes": "One sheet, notebook page or folded strip per player." },
