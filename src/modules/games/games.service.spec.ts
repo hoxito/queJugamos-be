@@ -115,3 +115,59 @@ describe("GamesService.query", () => {
     ]);
   });
 });
+
+describe("GamesService.filters", () => {
+  it("returns safe defaults when there are no approved games", async () => {
+    const prisma = {
+      material: {
+        findMany: () =>
+          Promise.resolve([
+            {
+              slug: "paper",
+              name: "Paper",
+              kind: "paper"
+            }
+          ])
+      },
+      category: {
+        findMany: () =>
+          Promise.resolve([
+            {
+              slug: "quick-play",
+              name: "Quick Play"
+            }
+          ])
+      },
+      game: {
+        aggregate: () =>
+          Promise.resolve({
+            _min: { minPlayers: null, minAge: null },
+            _max: { maxPlayers: null, minAge: null }
+          })
+      },
+      $transaction: (operations: Promise<unknown>[]) => Promise.all(operations)
+    };
+    const service = new GamesService(prisma as never, {} as never);
+
+    const response = await service.filters();
+
+    assert.deepEqual(response, {
+      categories: [{ slug: "quick-play", name: "Quick Play" }],
+      materials: [
+        {
+          slug: "paper",
+          name: "Paper",
+          kind: "paper",
+          requirementType: RequirementType.Required,
+          quantity: null,
+          notes: null
+        }
+      ],
+      difficulties: ["easy", "medium", "hard"],
+      minPlayers: 1,
+      maxPlayers: 1,
+      minAge: 0,
+      maxAge: 0
+    });
+  });
+});

@@ -10,7 +10,15 @@ export class RedisCacheService {
 
   async getJson<T>(key: string): Promise<T | null> {
     const value = await this.command(() => this.redis.get(key));
-    return value ? (JSON.parse(value) as T) : null;
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch (error) {
+      this.logger.warn(`Redis cache value is not valid JSON for ${key}: ${(error as Error).message}`);
+      await this.del(key);
+      return null;
+    }
   }
 
   async setJson(key: string, value: unknown, ttlSeconds: number): Promise<void> {
@@ -25,7 +33,9 @@ export class RedisCacheService {
   async deleteByPattern(pattern: string): Promise<void> {
     let cursor = "0";
     do {
-      const [nextCursor, keys] = await this.command(() => this.redis.scan(cursor, "MATCH", pattern, "COUNT", 100));
+      const result = await this.command(() => this.redis.scan(cursor, "MATCH", pattern, "COUNT", 100));
+      if (!result) return;
+      const [nextCursor, keys] = result;
       cursor = nextCursor;
       if (keys.length > 0) {
         await this.del(...keys);
@@ -48,16 +58,15 @@ export class RedisCacheService {
     });
   }
 
-  private async command<T>(operation: () => Promise<T>): Promise<T> {
-    if (this.redis.status === "wait") {
-      await this.redis.connect();
-    }
-
+  private async command<T>(operation: () => Promise<T>): Promise<T | null> {
     try {
+      if (this.redis.status === "wait") {
+        await this.redis.connect();
+      }
       return await operation();
     } catch (error) {
       this.logger.warn(`Redis cache command failed: ${(error as Error).message}`);
-      return null as T;
+      return null;
     }
   }
 }
