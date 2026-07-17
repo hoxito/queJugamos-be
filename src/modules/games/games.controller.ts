@@ -90,6 +90,15 @@ export class GamesController {
     return this.gamesService.moderate(slug, dto);
   }
 
+  @Get("moderation/:slug")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.Reviewer, UserRole.Admin)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: GameDetailDto })
+  findForModeration(@Param("slug") slug: string) {
+    return this.gamesService.findForModeration(slug);
+  }
+
   @Get(":slug")
   @ApiOkResponse({ type: GameDetailDto })
   @RedisCached({

@@ -23,10 +23,15 @@ describe("game content overrides", () => {
       "backgammon",
       "checkers",
       "chess",
+      "codenames",
       "go",
+      "just-one",
+      "pictionary",
       "tateti",
       "telestrations",
-      "tutifruti"
+      "the-resistance",
+      "tutifruti",
+      "werewolf"
     ]);
   });
 

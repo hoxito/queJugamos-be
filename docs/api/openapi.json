@@ -498,6 +498,10 @@
             "example": 60,
             "type": "number"
           },
+          "indoor": {
+            "example": true,
+            "type": "boolean"
+          },
           "materials": {
             "items": {
               "$ref": "#/components/schemas/PublicMaterialDto"
@@ -517,6 +521,10 @@
           "minPlayers": {
             "example": 3,
             "type": "number"
+          },
+          "outdoor": {
+            "example": false,
+            "type": "boolean"
           },
           "ratingAverage": {
             "example": 4.5,
@@ -538,6 +546,17 @@
             "example": "catan",
             "type": "string"
           },
+          "status": {
+            "enum": [
+              "draft",
+              "pending",
+              "approved",
+              "rejected",
+              "archived"
+            ],
+            "example": "approved",
+            "type": "string"
+          },
           "summaryMd": {
             "example": "Trade, build and race to ten victory points.",
             "type": "string"
@@ -553,6 +572,7 @@
           "summaryMd",
           "ratingAverage",
           "ratingCount",
+          "status",
           "categories",
           "materials",
           "ratings",
@@ -560,7 +580,9 @@
           "maxPlayers",
           "minAge",
           "difficulty",
-          "durationMinutes"
+          "durationMinutes",
+          "indoor",
+          "outdoor"
         ],
         "type": "object"
       },
@@ -601,6 +623,10 @@
             "minItems": 2,
             "type": "array"
           },
+          "indoor": {
+            "example": true,
+            "type": "boolean"
+          },
           "materials": {
             "items": {
               "$ref": "#/components/schemas/PublicMaterialDto"
@@ -620,6 +646,10 @@
           "minPlayers": {
             "example": 3,
             "type": "number"
+          },
+          "outdoor": {
+            "example": false,
+            "type": "boolean"
           },
           "ratingAverage": {
             "example": 4.5,
@@ -653,6 +683,17 @@
             "example": "catan",
             "type": "string"
           },
+          "status": {
+            "enum": [
+              "draft",
+              "pending",
+              "approved",
+              "rejected",
+              "archived"
+            ],
+            "example": "approved",
+            "type": "string"
+          },
           "summaryMd": {
             "example": "Trade, build and race to ten victory points.",
             "type": "string"
@@ -668,6 +709,7 @@
           "summaryMd",
           "ratingAverage",
           "ratingCount",
+          "status",
           "categories",
           "materials",
           "ratings",
@@ -676,6 +718,8 @@
           "minAge",
           "difficulty",
           "durationMinutes",
+          "indoor",
+          "outdoor",
           "rulesMd",
           "galleryImages",
           "downloadableAssets",
@@ -1970,6 +2014,180 @@
         ]
       }
     },
+    "/api/v1/games/moderation/{slug}": {
+      "get": {
+        "operationId": "GamesController_findForModeration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "default": "<string>",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "categories": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicCategoryDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "coverImage": {
+                      "$ref": "#/components/schemas/PublicAssetDto"
+                    },
+                    "difficulty": {
+                      "example": "medium",
+                      "type": "string"
+                    },
+                    "downloadableAssets": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "durationMinutes": {
+                      "example": 60,
+                      "type": "number"
+                    },
+                    "galleryImages": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "indoor": {
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "materials": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicMaterialDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "maxPlayers": {
+                      "example": 4,
+                      "type": "number"
+                    },
+                    "minAge": {
+                      "example": 10,
+                      "type": "number"
+                    },
+                    "minPlayers": {
+                      "example": 3,
+                      "type": "number"
+                    },
+                    "outdoor": {
+                      "example": false,
+                      "type": "boolean"
+                    },
+                    "ratingAverage": {
+                      "example": 4.5,
+                      "type": "number"
+                    },
+                    "ratingCount": {
+                      "example": 20,
+                      "type": "number"
+                    },
+                    "ratings": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicRatingDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "referenceLinks": {
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAssetDto"
+                      },
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    },
+                    "rulesMd": {
+                      "example": "## Objective\nReach ten victory points.",
+                      "type": "string"
+                    },
+                    "slug": {
+                      "example": "catan",
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "pending",
+                        "approved",
+                        "rejected",
+                        "archived"
+                      ],
+                      "example": "approved",
+                      "type": "string"
+                    },
+                    "summaryMd": {
+                      "example": "Trade, build and race to ten victory points.",
+                      "type": "string"
+                    },
+                    "title": {
+                      "example": "The Settlers of Catan",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "title",
+                    "summaryMd",
+                    "ratingAverage",
+                    "ratingCount",
+                    "status",
+                    "categories",
+                    "materials",
+                    "ratings",
+                    "minPlayers",
+                    "maxPlayers",
+                    "minAge",
+                    "difficulty",
+                    "durationMinutes",
+                    "indoor",
+                    "outdoor",
+                    "rulesMd",
+                    "galleryImages",
+                    "downloadableAssets",
+                    "referenceLinks"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "games"
+        ]
+      }
+    },
     "/api/v1/games/query": {
       "post": {
         "operationId": "GamesController_query",
@@ -2171,6 +2389,10 @@
                       "minItems": 2,
                       "type": "array"
                     },
+                    "indoor": {
+                      "example": true,
+                      "type": "boolean"
+                    },
                     "materials": {
                       "items": {
                         "$ref": "#/components/schemas/PublicMaterialDto"
@@ -2190,6 +2412,10 @@
                     "minPlayers": {
                       "example": 3,
                       "type": "number"
+                    },
+                    "outdoor": {
+                      "example": false,
+                      "type": "boolean"
                     },
                     "ratingAverage": {
                       "example": 4.5,
@@ -2223,6 +2449,17 @@
                       "example": "catan",
                       "type": "string"
                     },
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "pending",
+                        "approved",
+                        "rejected",
+                        "archived"
+                      ],
+                      "example": "approved",
+                      "type": "string"
+                    },
                     "summaryMd": {
                       "example": "Trade, build and race to ten victory points.",
                       "type": "string"
@@ -2238,6 +2475,7 @@
                     "summaryMd",
                     "ratingAverage",
                     "ratingCount",
+                    "status",
                     "categories",
                     "materials",
                     "ratings",
@@ -2246,6 +2484,8 @@
                     "minAge",
                     "difficulty",
                     "durationMinutes",
+                    "indoor",
+                    "outdoor",
                     "rulesMd",
                     "galleryImages",
                     "downloadableAssets",
@@ -2614,6 +2854,10 @@
                       "minItems": 2,
                       "type": "array"
                     },
+                    "indoor": {
+                      "example": true,
+                      "type": "boolean"
+                    },
                     "materials": {
                       "items": {
                         "$ref": "#/components/schemas/PublicMaterialDto"
@@ -2633,6 +2877,10 @@
                     "minPlayers": {
                       "example": 3,
                       "type": "number"
+                    },
+                    "outdoor": {
+                      "example": false,
+                      "type": "boolean"
                     },
                     "ratingAverage": {
                       "example": 4.5,
@@ -2666,6 +2914,17 @@
                       "example": "catan",
                       "type": "string"
                     },
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "pending",
+                        "approved",
+                        "rejected",
+                        "archived"
+                      ],
+                      "example": "approved",
+                      "type": "string"
+                    },
                     "summaryMd": {
                       "example": "Trade, build and race to ten victory points.",
                       "type": "string"
@@ -2681,6 +2940,7 @@
                     "summaryMd",
                     "ratingAverage",
                     "ratingCount",
+                    "status",
                     "categories",
                     "materials",
                     "ratings",
@@ -2689,6 +2949,8 @@
                     "minAge",
                     "difficulty",
                     "durationMinutes",
+                    "indoor",
+                    "outdoor",
                     "rulesMd",
                     "galleryImages",
                     "downloadableAssets",

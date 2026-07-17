@@ -42,7 +42,9 @@ const game = (slug: string, ratingAverage: number, materials: ReturnType<typeof 
   materials,
   categories: [],
   assets: [],
-  ratings: []
+  ratings: [],
+  comments: [],
+  cardAdaptations: []
 });
 
 describe("GamesService.query", () => {
@@ -168,6 +170,55 @@ describe("GamesService.filters", () => {
       maxPlayers: 1,
       minAge: 0,
       maxAge: 0
+    });
+  });
+});
+
+describe("GamesService.findBySlug", () => {
+  it("only returns approved games from the public detail lookup", async () => {
+    let findFirstArgs: Record<string, unknown> | undefined;
+    const prisma = {
+      game: {
+        findFirst: (args: Record<string, unknown>) => {
+          findFirstArgs = args;
+          return Promise.resolve(game("just-one", 4.5, [material("cards")], new Date("2026-01-01T00:00:00.000Z")));
+        }
+      }
+    };
+    const service = new GamesService(prisma as never, {} as never);
+
+    const response = await service.findBySlug("just-one");
+
+    assert.equal(response.slug, "just-one");
+    assert.deepEqual(findFirstArgs?.where, {
+      slug: "just-one",
+      deletedAt: null,
+      status: GameStatus.Approved
+    });
+  });
+
+  it("allows moderation detail lookup without forcing approved status", async () => {
+    let findFirstArgs: Record<string, unknown> | undefined;
+    const pendingGame = {
+      ...game("werewolf", 4.2, [material("cards")], new Date("2026-01-01T00:00:00.000Z")),
+      status: GameStatus.Pending
+    };
+    const prisma = {
+      game: {
+        findFirst: (args: Record<string, unknown>) => {
+          findFirstArgs = args;
+          return Promise.resolve(pendingGame);
+        }
+      }
+    };
+    const service = new GamesService(prisma as never, {} as never);
+
+    const response = await service.findForModeration("werewolf");
+
+    assert.equal(response.status, GameStatus.Pending);
+    assert.deepEqual(findFirstArgs?.where, {
+      slug: "werewolf",
+      deletedAt: null
     });
   });
 });

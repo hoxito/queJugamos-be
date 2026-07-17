@@ -120,6 +120,7 @@ const metadataOverrides = {
   scrabble: { minPlayers: 2, maxPlayers: 4, minAge: 10, durationMinutes: 60, difficulty: "medium" },
   "terraforming-mars": { minPlayers: 1, maxPlayers: 5, minAge: 12, durationMinutes: 120, difficulty: "hard" },
   "ticket-to-ride": { minPlayers: 2, maxPlayers: 5, minAge: 8, durationMinutes: 45, difficulty: "easy" },
+  werewolf: { minPlayers: 7, maxPlayers: 15, minAge: 8, durationMinutes: 30, difficulty: "easy" },
   wingspan: { minPlayers: 1, maxPlayers: 5, minAge: 10, durationMinutes: 60, difficulty: "medium" }
 };
 
