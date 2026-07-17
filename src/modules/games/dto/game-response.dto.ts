@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { GameStatus } from "../domain/game.enums";
 
 export class PublicAssetDto {
   @ApiProperty({ example: "cover" })
@@ -78,6 +79,9 @@ export class GameCatalogItemDto {
   @ApiPropertyOptional({ type: PublicAssetDto })
   coverImage?: PublicAssetDto | null;
 
+  @ApiProperty({ enum: GameStatus, example: GameStatus.Approved })
+  status: GameStatus;
+
   @ApiProperty({ type: [PublicCategoryDto] })
   categories: PublicCategoryDto[];
 
@@ -101,6 +105,12 @@ export class GameCatalogItemDto {
 
   @ApiProperty({ example: 60 })
   durationMinutes: number;
+
+  @ApiProperty({ example: true })
+  indoor: boolean;
+
+  @ApiProperty({ example: false })
+  outdoor: boolean;
 }
 
 export class PaginatedGamesDto {

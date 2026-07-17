@@ -301,7 +301,12 @@ export class GamesService {
       data: { status: dto.status }
     });
     await this.invalidateGameCaches(slug);
-    return this.findBySlug(slug);
+    return this.findForModeration(slug);
+  }
+
+  async findForModeration(slug: string) {
+    const game = await this.findGameBySlug(slug, {});
+    return mapDetailGame(game);
   }
 
   private async queryByStatus(filters: QueryGamesDto, status: GameStatus) {
@@ -397,8 +402,14 @@ export class GamesService {
   }
 
   async findBySlug(slug: string) {
+    const game = await this.findGameBySlug(slug, { status: GameStatus.Approved });
+
+    return mapDetailGame(game);
+  }
+
+  private async findGameBySlug(slug: string, extraWhere: Prisma.GameWhereInput) {
     const game = await this.prisma.game.findFirst({
-      where: { slug, deletedAt: null },
+      where: { slug, deletedAt: null, ...extraWhere },
       include: gameInclude
     });
 
@@ -406,8 +417,7 @@ export class GamesService {
       throw new NotFoundException("Game not found.");
     }
 
-    const response = mapDetailGame(game);
-    return response;
+    return game;
   }
 
   async findIdBySlug(slug: string) {
@@ -441,6 +451,7 @@ function mapCatalogGame(game: GameCatalogRecord) {
     summaryMd: game.summaryMd,
     ratingAverage: Number(game.ratingAverage),
     ratingCount: game.ratingCount,
+    status: game.status,
     coverImage: images[0] ?? null,
     categories: game.categories.map((item) => ({
       slug: item.category.slug,
@@ -459,7 +470,9 @@ function mapCatalogGame(game: GameCatalogRecord) {
     maxPlayers: game.maxPlayers,
     minAge: game.minAge,
     difficulty: game.difficulty,
-    durationMinutes: game.durationMinutes
+    durationMinutes: game.durationMinutes,
+    indoor: game.indoor,
+    outdoor: game.outdoor
   };
 }
 
