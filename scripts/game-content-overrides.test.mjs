@@ -47,4 +47,12 @@ describe("game content overrides", () => {
       }
     }
   });
+
+  it("keeps chess as a complete playable manual, not a short catalog summary", () => {
+    const chessRules = overrides.chess.rulesMd.toLowerCase();
+    assert.ok(overrides.chess.rulesMd.length > 3000, "chess rules must be detailed enough to play");
+    for (const expected of ["king", "queen", "rook", "bishop", "knight", "pawn", "castling", "en passant", "promotion", "checkmate", "stalemate"]) {
+      assert.ok(chessRules.includes(expected), `chess rules must explain ${expected}`);
+    }
+  });
 });
